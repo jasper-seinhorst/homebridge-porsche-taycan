@@ -1,0 +1,28 @@
+{
+  "pluginAlias": "PorscheTaycan",
+  "pluginType": "platform",
+  "singular": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "username": {
+        "title": "Porsche Connect username",
+        "type": "string",
+        "required": true,
+        "default": ""
+      },
+      "password": {
+        "title": "Porsche Connect password",
+        "type": "string",
+        "required": true,
+        "default": ""
+      },
+      "pollInterval": {
+        "title": "Poll interval in minutes",
+        "type": "number",
+        "required": true,
+        "default": 10
+      }
+    }
+  }
+}
