@@ -2,7 +2,7 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, 
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { PorscheChargerAccessory } from './chargerAccessory';
-import PorscheConnect from 'porsche-connect';
+import PorscheConnect, { EngineType } from './porsche-connect';
 
 export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
   constructor(
@@ -30,7 +30,7 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
   async discoverDevices() {
     const vehicles = await this.PorscheConnectAuth.getVehicles();
     for (const vehicle of vehicles) {
-      if (vehicle.modelDescription.toLowerCase().includes('taycan')) {
+      if ([EngineType.BatteryPowered, EngineType.PluginHybrid].includes(vehicle.engineType)) {
         const uuid = this.api.hap.uuid.generate(vehicle.vin);
         const existingAccessory = this.accessories.find(accessory => accessory.UUID === uuid);
         if (existingAccessory) {
@@ -43,6 +43,8 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
           new PorscheChargerAccessory(this, accessory);
           this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
         }
+      } else {
+        this.log.info('Vehicle not supported', vehicle.engineType);
       }
     }
   }

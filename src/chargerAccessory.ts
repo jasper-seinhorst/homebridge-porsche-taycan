@@ -1,5 +1,5 @@
 import { Service, PlatformAccessory } from 'homebridge';
-import { Vehicle } from 'porsche-connect';
+import { Vehicle } from './porsche-connect';
 
 import { PorscheTaycanPlatform } from './platform';
 
@@ -15,26 +15,29 @@ export class PorscheChargerAccessory {
   ) {
     this.vehicle = new Vehicle(this.platform.PorscheConnectAuth, this.accessory.context.device);
 
-    this.accessory.getService(this.platform.Service.AccessoryInformation)!
-      .setCharacteristic(this.platform.Characteristic.Manufacturer, 'Porsche')
-      .setCharacteristic(this.platform.Characteristic.Model, this.accessory.context.device.modelType)
-      .setCharacteristic(this.platform.Characteristic.SerialNumber, this.accessory.context.device.vin);
-
-    // Charger
+    // charger
     this.chargerService = this.accessory.getService(this.platform.Service.OccupancySensor)
       || this.accessory.addService(this.platform.Service.OccupancySensor);
 
     // Battery
     this.batteryService = this.accessory.getService(this.platform.Service.Battery)
       || this.accessory.addService(this.platform.Service.Battery);
-    this.getBatteryState();
 
-    // Update state every couple of minutes
-    const interval = this.platform.config.pollInterval || 10;
-    this.platform.log.debug('Interval battery ->', this.platform.config.pollInterval);
-    setInterval(() => {
+    this.initialise();
+  }
+
+  async initialise() {
+    if (this.vehicle.permissions.userRoleStatus === 'ENABLED') {
+      // get initial battery state
       this.getBatteryState();
-    }, (interval * 60 * 1000));
+
+      // refresh state every X minutes
+      const interval = this.platform.config.pollInterval || 10;
+      this.platform.log.debug('Interval battery ->', this.platform.config.pollInterval);
+      setInterval(() => {
+        this.getBatteryState();
+      }, (interval * 60 * 1000));
+    }
   }
 
   async getBatteryState() {
