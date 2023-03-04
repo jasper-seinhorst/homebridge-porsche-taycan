@@ -4,12 +4,9 @@ import type {
   EngineType,
   SteeringWheelPosition,
   PlugState,
-  LockState,
   ChargingState,
   ChargingMode,
-  ClimatisationState,
   ChargingStatus,
-  ChargeTimerFrequency,
   SpeedUnit,
   DistanceUnit,
   DoorStatus,
@@ -61,7 +58,6 @@ export type VehiclePicture = {
 export type VehicleEMobility = {
   batteryChargeStatus: {
     plugState: PlugState;
-    lockState: LockState;
     chargingState: ChargingState;
     chargingReason: string; // 'INVALID'
     externalPowerSupplyState: string; // 'UNAVAILABLE'
@@ -92,7 +88,6 @@ export type VehicleEMobility = {
     isActive: boolean;
   };
   directClimatisation: {
-    climatisationState: ClimatisationState;
     remainingClimatisationTime: number | null;
   };
   chargingStatus: ChargingStatus;
@@ -110,7 +105,6 @@ export type ChargingTimer = {
   preferredChargingTimeEnabled: boolean;
   preferredChargingStartTime: null;
   preferredChargingEndTime: null;
-  frequency: ChargeTimerFrequency;
   climatised: boolean;
   weekDays: {
     MONDAY: boolean;
