@@ -1,5 +1,5 @@
 import type { Moment } from 'moment';
-import { PorscheSecurityAccessory } from '../securityAccessory';
+
 import type {
   EngineType,
   SteeringWheelPosition,
@@ -302,14 +302,3 @@ export type TyreInfo = {
   } | null;
   tirePressureDifferenceStatus: 'DIVERGENT' | 'UNKNOWN';
 };
-
-export type VehicleSecurityAccessoires = {
-  vin: string,
-  accessories: PorscheSecurityAccessory[],
-}
-
-export type SecurityTypes = {
-  type: 'windows' | 'doors';
-  location: string;
-  name: string;
-}

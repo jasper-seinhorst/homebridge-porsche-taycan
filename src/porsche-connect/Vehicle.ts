@@ -45,20 +45,4 @@ export class Vehicle {
       throw new NotSupportedError();
     }
   }
-
-  public async getStoredOverview(): Promise<VehicleOverview> {
-    return await this.porscheConnect.getVehicleStoredOverview(this.vin);
-  }
-
-  public async getCurrentOverview(): Promise<VehicleOverview> {
-    return await this.porscheConnect.getVehicleCurrentOverview(this.vin);
-  }
-
-  public async getMaintenanceInfo(): Promise<any> {
-    return await this.porscheConnect.getVehicleMaintenanceInfo(this.vin);
-  }
-
-  public async getTripInfo(longTermOverview = false): Promise<TripInfo[]> {
-    return await this.porscheConnect.getVehicleTripInfo(this.vin, longTermOverview);
-  }
 }

@@ -38,29 +38,4 @@ export class Routes {
   public vehicleEmobilityURL(vin: string, carModel: string): string {
     return `https://api.porsche.com/e-mobility/${this.env.country}/${this.env.locale}/${carModel}/${vin}?timezone=${this.env.timeZone}`;
   }
-  
-  public vehicleStoredOverviewURL(vin: string): string {
-    return `https://api.porsche.com/service-vehicle/${this.env.country}/${this.env.locale}/vehicle-data/${vin}/stored`;
-  }
-
-  public vehicleCurrentOverviewInvokeURL(vin: string): string {
-    return `https://api.porsche.com/service-vehicle/${this.env.country}/${this.env.locale}/vehicle-data/${vin}/current/request`;
-  }
-
-  public vehicleCurrentOverviewStatusURL(vin: string, requestId: string): string {
-    return `https://api.porsche.com/service-vehicle/${this.env.country}/${this.env.locale}/vehicle-data/${vin}/current/request/${requestId}/status`;
-  }
-
-  public vehicleCurrentOverviewDataURL(vin: string, requestId: string): string {
-    return `https://api.porsche.com/service-vehicle/${this.env.country}/${this.env.locale}/vehicle-data/${vin}/current/request/${requestId}`;
-  }
-
-  public vehicleMaintenanceInfoURL(vin: string): string {
-    return `https://api.porsche.com/predictive-maintenance/information/${vin}`;
-  }
-
-  public vehicleTripsUrl(vin: string, longTerm: boolean): string {
-    const term = longTerm ? 'LONG_TERM/newest' : 'SHORT_TERM';
-    return `https://api.porsche.com/service-vehicle/${this.env.country}/${this.env.locale}/trips/${vin}/${term}`;
-  }
 }

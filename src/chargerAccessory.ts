@@ -15,11 +15,11 @@ export class PorscheChargerAccessory {
   ) {
     this.vehicle = new Vehicle(this.platform.PorscheConnectAuth, this.accessory.context.device);
 
-    // charger
+    // OccupancySensor reflecting charger state
     this.chargerService = this.accessory.getService(this.platform.Service.OccupancySensor)
       || this.accessory.addService(this.platform.Service.OccupancySensor);
 
-    // Battery
+    // SoC vehicle
     this.batteryService = this.accessory.getService(this.platform.Service.Battery)
       || this.accessory.addService(this.platform.Service.Battery);
 

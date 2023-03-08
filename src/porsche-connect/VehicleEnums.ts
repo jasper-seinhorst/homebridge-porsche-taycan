@@ -46,11 +46,6 @@ export enum PlugState {
   Disconnected = 'DISCONNECTED'
 }
 
-export enum LockState {
-  Locked = 'LOCKED',
-  Unlocked = 'UNLOCKED'
-}
-
 export enum ChargingState {
   Charging = 'CHARGING',
   Off = 'OFF'
@@ -64,16 +59,6 @@ export enum ChargingStatus {
 export enum ChargingMode {
   On = 'ON',
   Off = 'OFF'
-}
-
-export enum ClimatisationState {
-  On = 'ON',
-  Off = 'OFF'
-}
-
-export enum ChargeTimerFrequency {
-  Cyclic = 'CYCLIC',
-  Single = 'SINGLE'
 }
 
 export enum PressureUnit {
