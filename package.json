@@ -1,6 +1,6 @@
 {
   "displayName": "Homebridge Porsche Taycan",
-  "name": "@jasper-seinhorst/homebridge-porsche-taycan",
+  "name": "homebridge-porsche-taycan",
   "version": "0.5.1",
   "description": "Control your Porsche Taycan through the home app",
   "license": "Apache-2.0",
@@ -11,9 +11,6 @@
   },
   "bugs": {
     "url": "https://github.com/jasper-seinhorst/homebridge-porsche-taycan/issues"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   },
   "engines": {
     "node": ">=14.18.1",
