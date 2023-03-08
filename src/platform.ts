@@ -30,11 +30,11 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
   async discoverDevices() {
     const vehicles = await this.PorscheConnectAuth.getVehicles();
     for (const vehicle of vehicles) {
-      // Battery accessory
+      // Charger accessory
       if (vehicle.engineType === EngineType.BatteryPowered) {
         const uuidCharger = this.api.hap.uuid.generate(`${vehicle.vin}-charger`);
         const existingAccessoryCharger = this.accessories.find(accessory => accessory.UUID === uuidCharger);
-        const accessoryName = `${vehicle.modelDescription} Battery`;
+        const accessoryName = `${vehicle.modelDescription} Charger`;
 
         if (existingAccessoryCharger) {
           this.log.info('Restoring accessory from cache:', accessoryName);
