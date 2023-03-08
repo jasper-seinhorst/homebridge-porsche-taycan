@@ -1,6 +1,6 @@
 {
   "displayName": "Homebridge Porsche Taycan",
-  "name": "homebridge-porsche-taycan",
+  "name": "@jasper-seinhorst/homebridge-porsche-taycan",
   "version": "0.5.1",
   "description": "Control your Porsche Taycan through the home app",
   "license": "Apache-2.0",
