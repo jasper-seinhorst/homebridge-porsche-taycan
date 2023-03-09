@@ -1,4 +1,4 @@
-# Homebridge plugin Porsche Taycan
+# Homebridge Porsche Taycan
 This Homebridge plugin exposes different states about your vehicle(s). Such as charging state and battery level. The charging state is exposed
 as occupancy sensor to indicate if your Taycan is charging and a battery accessory reflecting your vehicles battery.
 
