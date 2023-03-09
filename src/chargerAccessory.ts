@@ -4,9 +4,12 @@ import { Vehicle } from './porsche-connect';
 import { PorscheTaycanPlatform } from './platform';
 
 export class PorscheChargerAccessory {
-  private chargerService: Service;
+  private chargerSensorService: Service;
   private batteryService: Service;
   private vehicle: Vehicle;
+  private lowBatteryLevel: number;
+  private pollInterval: number;
+  private sensorType: 'occupancy' | 'contact';
 
   constructor(
     private readonly platform: PorscheTaycanPlatform,
@@ -14,12 +17,17 @@ export class PorscheChargerAccessory {
 
   ) {
     this.vehicle = new Vehicle(this.platform.PorscheConnectAuth, this.accessory.context.device);
+    this.lowBatteryLevel = this.platform.config.lowBattery || 35;
+    this.pollInterval = this.platform.config.pollInterval || 15;
+    this.sensorType = this.platform.config.chargerDevice || 'occupancy';
 
-    // OccupancySensor reflecting charger state
-    this.chargerService = this.accessory.getService(this.platform.Service.OccupancySensor)
-      || this.accessory.addService(this.platform.Service.OccupancySensor);
-
-    // SoC vehicle
+    if (this.sensorType === 'occupancy') {
+      this.chargerSensorService = this.accessory.getService(this.platform.Service.OccupancySensor)
+        || this.accessory.addService(this.platform.Service.OccupancySensor);
+    } else {
+      this.chargerSensorService = this.accessory.getService(this.platform.Service.ContactSensor)
+        || this.accessory.addService(this.platform.Service.ContactSensor);
+    }
     this.batteryService = this.accessory.getService(this.platform.Service.Battery)
       || this.accessory.addService(this.platform.Service.Battery);
 
@@ -27,21 +35,18 @@ export class PorscheChargerAccessory {
   }
 
   async initialise() {
-    if (this.vehicle.permissions.userRoleStatus === 'ENABLED') {
-      // get initial battery state
-      this.getBatteryState();
+    // get initial battery state
+    this.getBatteryState();
 
-      // refresh state every X minutes
-      const interval = this.platform.config.pollInterval || 10;
-      this.platform.log.debug('Interval battery ->', this.platform.config.pollInterval);
-      setInterval(() => {
-        this.getBatteryState();
-      }, (interval * 60 * 1000));
-    }
+    // refresh state every X minutes
+    this.platform.log.debug('Interval battery in minutes ->', this.pollInterval);
+    setInterval(() => {
+      this.getBatteryState();
+    }, (this.pollInterval * 60 * 1000));
   }
 
   async getBatteryState() {
-    this.platform.log.debug('Retrieving Battery Characteristic form Porsche Connect API');
+    this.platform.log.info('Updating Battery Characteristic form Porsche Connect API');
     const emobilityInfo = await this.vehicle.getEmobilityInfo();
 
     const battery = emobilityInfo.batteryChargeStatus.stateOfChargeInPercentage;
@@ -50,9 +55,14 @@ export class PorscheChargerAccessory {
 
     const isCharging = emobilityInfo.batteryChargeStatus.chargingState === 'CHARGING';
     this.platform.log.debug('Set Characteristic Charging ->', isCharging);
-    this.chargerService.setCharacteristic(this.platform.Characteristic.OccupancyDetected, isCharging);
+    if (this.sensorType === 'occupancy') {
+      this.chargerSensorService.setCharacteristic(this.platform.Characteristic.OccupancyDetected, isCharging);
+    } else {
+      this.chargerSensorService.setCharacteristic(this.platform.Characteristic.ContactSensorState, isCharging);
+    }
+    this.batteryService.setCharacteristic(this.platform.Characteristic.ChargingState, isCharging);
 
-    const isLowBattery = (battery <= 30);
+    const isLowBattery = (battery <= this.lowBatteryLevel);
     this.platform.log.debug('Set Characteristic Low Battery ->', isLowBattery);
     this.batteryService.setCharacteristic(this.platform.Characteristic.StatusLowBattery, isLowBattery);
   }

@@ -18,10 +18,37 @@
         "default": ""
       },
       "pollInterval": {
-        "title": "Poll interval in minutes",
+        "title": "Poll interval (in minutes)",
         "type": "number",
         "required": true,
-        "default": 10
+        "default": 15
+      },
+      "chargerDevice": {
+        "title": "Charger device",
+        "type": "string",
+        "required": true,
+        "oneOf": [
+          {
+            "title": "Occupancy sensor",
+            "enum": [
+              "occupancy"
+            ]
+          },
+          {
+            "title": "Contact sensor",
+            "enum": [
+              "contact"
+            ]
+          }
+        ]
+      },
+      "lowBattery": {
+        "title": "Low battery level",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100,
+        "default": 35,
+        "description": "What battery level in percentage is considered low"
       }
     }
   }

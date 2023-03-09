@@ -1,6 +1,4 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
-
-import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { PorscheChargerAccessory } from './chargerAccessory';
 import PorscheConnect, { EngineType } from './porsche-connect';
 
@@ -12,7 +10,7 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
   ) {
     this.log.debug('Finished initializing platform:', this.config.name);
     this.api.on('didFinishLaunching', () => {
-      log.debug('Executed didFinishLaunching callback');
+      this.log.debug('Executed didFinishLaunching callback');
       this.discoverDevices();
     });
   }
@@ -30,24 +28,22 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
   async discoverDevices() {
     const vehicles = await this.PorscheConnectAuth.getVehicles();
     for (const vehicle of vehicles) {
-      // Charger accessory
       if (vehicle.engineType === EngineType.BatteryPowered) {
         const uuidCharger = this.api.hap.uuid.generate(`${vehicle.vin}-charger`);
         const existingAccessoryCharger = this.accessories.find(accessory => accessory.UUID === uuidCharger);
         const accessoryName = `${vehicle.modelDescription} Charger`;
 
         if (existingAccessoryCharger) {
-          this.log.info('Restoring accessory from cache:', accessoryName);
           new PorscheChargerAccessory(this, existingAccessoryCharger);
         } else {
-          this.log.info('Adding new accessory:', accessoryName);
+          this.log.info(`Your Porsche ${vehicle.modelDescription} is added as accessory`);
           const accessory = new this.api.platformAccessory(accessoryName, uuidCharger);
           accessory.context.device = vehicle;
           new PorscheChargerAccessory(this, accessory);
-          this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+          this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
         }
       } else {
-        this.log.info('Vehicle not supported, unsupported engine type', vehicle.engineType);
+        this.log.info(`Your porsche ${vehicle.modelDescription} is not supported, it has an unsupported engine type ${vehicle.engineType}`);
       }
     }
   }
