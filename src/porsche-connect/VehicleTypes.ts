@@ -88,6 +88,7 @@ export type VehicleEMobility = {
     isActive: boolean;
   };
   directClimatisation: {
+    climatisationState: 'ON' | 'OFF';
     remainingClimatisationTime: number | null;
   };
   chargingStatus: ChargingStatus;
