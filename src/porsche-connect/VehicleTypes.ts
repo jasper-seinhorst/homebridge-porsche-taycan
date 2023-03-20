@@ -25,12 +25,12 @@ export type VehicleConfig = {
   modelYear: number;
   carModel: string;
   engineType: EngineType;
-  relationship: string;
-  exteriorColor: string;
-  exteriorColorHex: string;
+  relationship?: string;
+  exteriorColor?: string;
+  exteriorColorHex?: string;
   steeringWheelPosition: SteeringWheelPosition;
   pictures?: VehiclePicture[];
-  nickName: string | null;
+  nickName?: string | null;
   remoteCapabilities: VehicleCapabilities;
   permissions: {
     userIsActive: boolean;

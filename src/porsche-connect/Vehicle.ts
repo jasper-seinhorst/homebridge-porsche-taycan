@@ -4,8 +4,6 @@ import type {
   VehicleCapabilities,
   VehicleConfig,
   VehicleEMobility,
-  VehicleOverview,
-  TripInfo
 } from './VehicleTypes';
 
 export class NotSupportedError extends Error {}
