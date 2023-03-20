@@ -1,7 +1,7 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
 import { PorscheChargerAccessory } from './ChargerAccessory';
 import PorscheConnect, { EngineType, Vehicle } from './porsche-connect';
-import { PlatformVehicle } from './PlatformTypes';
+import { PlatformVehicle, PorscheAccessory } from './PlatformTypes';
 
 export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
   public readonly Service: typeof Service = this.api.hap.Service;
@@ -9,10 +9,10 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
   public readonly accessories: PlatformAccessory[] = [];
   public readonly PorscheConnectAuth = new PorscheConnect({ username: this.config.username, password: this.config.password });
   private platformVehicles: PlatformVehicle[] = [];
-  private pollInterval: number;
+  private heartBeatInterval: number;
 
   constructor(public readonly log: Logger, public readonly config: PlatformConfig, public readonly api: API) {
-    this.pollInterval = config.pollInterval || 15;
+    this.heartBeatInterval = (config.pollInterval || 15) * 60 * 1000;
     this.api.on('didFinishLaunching', () => {
       this.initialise();
     });
@@ -25,10 +25,10 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
   private async initialise() {
     await this.discoverVehicles();
 
-    this.hearthBeat();
+    this.heartBeat();
     setInterval(() => {
-      this.hearthBeat();
-    }, (this.pollInterval * 60 * 1000));
+      this.heartBeat();
+    }, this.heartBeatInterval);
   }
 
   private async discoverVehicles() {
@@ -36,19 +36,21 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
     for (const vehicle of vehicles) {
       if (vehicle.engineType === EngineType.BatteryPowered) {
         const platformVehicle: PlatformVehicle = { vehicle, accessories: [] };
-        const uuidCharger = this.api.hap.uuid.generate(`${vehicle.vin}-charger`);
-        const existingAccessoryCharger = this.accessories.find(accessory => accessory.UUID === uuidCharger);
+        const uuid = this.api.hap.uuid.generate(`${vehicle.vin}-charger`);
+        const existingAccessory = this.accessories.find(accessory => accessory.UUID === uuid);
         const accessoryName = `${vehicle.modelDescription} Charger`;
 
-        if (existingAccessoryCharger) {
-          platformVehicle.accessories.push(new PorscheChargerAccessory(this.config, this.log, this.api, existingAccessoryCharger));
+        if (existingAccessory) {
+          this.log.info(`Porsche ${vehicle.modelDescription} is ready`);
+          platformVehicle.accessories.push(new PorscheChargerAccessory(this.config, this.log, this.api, existingAccessory));
         } else {
-          this.log.info(`Your Porsche ${vehicle.modelDescription} is added as accessory`);
-          const accessory = new this.api.platformAccessory(accessoryName, uuidCharger);
+          this.log.info(`Porsche ${vehicle.modelDescription} is added as accessory`);
+          const accessory = new this.api.platformAccessory(accessoryName, uuid);
           accessory.context.device = vehicle;
           platformVehicle.accessories.push(new PorscheChargerAccessory(this.config, this.log, this.api, accessory));
           this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
         }
+
         this.platformVehicles.push(platformVehicle);
       } else {
         this.log.info(`Your Porsche ${vehicle.modelDescription} is not supported, it has an unsupported engine type ${vehicle.engineType}`);
@@ -56,11 +58,12 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
     }
   }
 
-  private async hearthBeat() {
-    this.platformVehicles.forEach(async platformVehicle => {
+  private async heartBeat() {
+    this.platformVehicles.forEach(async (platformVehicle: PlatformVehicle) => {
+      this.log.info(`Updating vehicle data for ${platformVehicle.vehicle.modelDescription}`);
       const vehicle = new Vehicle(this.PorscheConnectAuth, platformVehicle.vehicle);
       const emobilityInfo = await vehicle.getEmobilityInfo();
-      platformVehicle.accessories.forEach(accessory => {
+      platformVehicle.accessories.forEach((accessory: PorscheAccessory) => {
         accessory.update(emobilityInfo);
       });
     });
