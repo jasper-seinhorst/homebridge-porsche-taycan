@@ -6,7 +6,10 @@ export class PorscheChargerAccessory implements PorscheAccessory {
   public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
   private chargerSensorService: Service;
   private batteryService: Service;
+  private batteryLevel: number = 100;
   private lowBatteryLevel: number;
+  private isLowBatteryLevel: boolean = false;
+  private isCharging: boolean = false;
   private sensorType: 'occupancy' | 'contact';
 
   constructor(public config: PlatformConfig, public readonly log: Logger, public readonly api: API, public accessory: PlatformAccessory) {
@@ -25,21 +28,33 @@ export class PorscheChargerAccessory implements PorscheAccessory {
   }
 
   public update(emobilityInfo) {
-    const battery = emobilityInfo.batteryChargeStatus.stateOfChargeInPercentage;
-    this.log.debug('Set Characteristic Battery ->', battery);
-    this.batteryService.setCharacteristic(this.Characteristic.BatteryLevel, battery);
+    // Battery level
+    const newBatteryLevel = emobilityInfo.batteryChargeStatus.stateOfChargeInPercentage;
+    if (newBatteryLevel !== this.batteryLevel) {
+      this.batteryLevel = newBatteryLevel;
+      this.batteryService.setCharacteristic(this.Characteristic.BatteryLevel, newBatteryLevel);
+      this.log.info('Update battery level', newBatteryLevel);
+    }
 
+    // Is battery low state
+    const isLowBatteryLevel = (this.batteryLevel <= this.lowBatteryLevel);
+    this.batteryService.setCharacteristic(this.Characteristic.StatusLowBattery, isLowBatteryLevel);
+    if (isLowBatteryLevel !== this.isLowBatteryLevel) {
+      this.isLowBatteryLevel = isLowBatteryLevel;
+      this.log.info('Update low battery level state', isLowBatteryLevel);
+    }
+
+    // Charging state
     const isCharging = emobilityInfo.batteryChargeStatus.chargingState === 'CHARGING';
-    this.log.debug('Set Characteristic Charging ->', isCharging);
     if (this.sensorType === 'occupancy') {
       this.chargerSensorService.setCharacteristic(this.Characteristic.OccupancyDetected, isCharging);
     } else {
       this.chargerSensorService.setCharacteristic(this.Characteristic.ContactSensorState, isCharging);
     }
     this.batteryService.setCharacteristic(this.Characteristic.ChargingState, isCharging);
-
-    const isLowBattery = (battery <= this.lowBatteryLevel);
-    this.log.debug('Set Characteristic Low Battery ->', isLowBattery);
-    this.batteryService.setCharacteristic(this.Characteristic.StatusLowBattery, isLowBattery);
+    if (isCharging !== this.isCharging) {
+      this.isCharging = isCharging;
+      this.log.info('Update charging state', isCharging);
+    }
   }
 }
