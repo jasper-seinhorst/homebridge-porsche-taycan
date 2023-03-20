@@ -1,7 +1,7 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
 import { PorscheChargerAccessory } from './ChargerAccessory';
 import PorscheConnect, { EngineType, Vehicle } from './porsche-connect';
-import { PlatformVehicle, PorscheAccessory } from './PlatformTypes';
+import { PlatformVehicle } from './PlatformTypes';
 
 export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
   public readonly Service: typeof Service = this.api.hap.Service;

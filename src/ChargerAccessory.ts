@@ -6,10 +6,10 @@ export class PorscheChargerAccessory implements PorscheAccessory {
   public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
   private chargerSensorService: Service;
   private batteryService: Service;
-  private batteryLevel: number = 100;
+  private batteryLevel = 100;
   private lowBatteryLevel: number;
-  private isLowBatteryLevel: boolean = false;
-  private isCharging: boolean = false;
+  private isLowBatteryLevel = false;
+  private isCharging = false;
   private sensorType: 'occupancy' | 'contact';
 
   constructor(public config: PlatformConfig, public readonly log: Logger, public readonly api: API, public accessory: PlatformAccessory) {
