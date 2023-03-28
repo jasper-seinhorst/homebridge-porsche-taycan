@@ -54,7 +54,7 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
         }
 
         // Register DirectCharge
-        const directChargeUuid = this.api.hap.uuid.generate(`${vehicle.vin}-charger`);
+        const directChargeUuid = this.api.hap.uuid.generate(`${vehicle.vin}-direct-charge`);
         const directChargeExistingAccessory = this.accessories.find(accessory => accessory.UUID === directChargeUuid);
         const directChargeAccessoryName = `${vehicle.modelDescription} Direct Charge`;
 
