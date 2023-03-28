@@ -23,6 +23,11 @@ export class Routes {
     return `https://api.porsche.com/core/api/v3/${this.env.country}/${this.env.locale}/vehicles`;
   }
 
+  public vehicleToggleDirectChargingURL(vin: string, carModel: string, on: boolean): string {
+    const action = on ? 'true' : 'false';
+    return `https://api.porsche.com/e-mobility/${this.env.country}/${this.env.locale}/${carModel}/${vin}/toggle-direct-charging/${action}`;
+  }
+
   public vehiclePermissionsURL(vin: string): string {
     return `https://api.porsche.com/core/api/v2/${this.env.country}/${this.env.locale}/vehicles/${vin}/permissions`;
   }
@@ -37,5 +42,9 @@ export class Routes {
 
   public vehicleEmobilityURL(vin: string, carModel: string): string {
     return `https://api.porsche.com/e-mobility/${this.env.country}/${this.env.locale}/${carModel}/${vin}?timezone=${this.env.timeZone}`;
+  }
+
+  public vehicleToggleDirectChargingStatusURL(vin: string, carModel: string, requestId: string): string {
+    return `https://api.porsche.com/e-mobility/${this.env.country}/${this.env.locale}/${carModel}/${vin}/toggle-direct-charging/status/${requestId}`;
   }
 }

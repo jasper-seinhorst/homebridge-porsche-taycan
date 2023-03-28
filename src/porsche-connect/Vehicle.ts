@@ -6,7 +6,7 @@ import type {
   VehicleEMobility,
 } from './VehicleTypes';
 
-export class NotSupportedError extends Error {}
+export class NotSupportedError extends Error { }
 
 export class Vehicle {
   private readonly porscheConnect: PorscheConnect;
@@ -42,5 +42,13 @@ export class Vehicle {
     } else {
       throw new NotSupportedError();
     }
+  }
+
+  public async enableDirectCharge(waitForConfirmation = false) {
+    await this.porscheConnect.enableVehicleDirectCharge(this.vin, this.carModel, waitForConfirmation);
+  }
+
+  public async disableDirectCharge(waitForConfirmation = false) {
+    await this.porscheConnect.disableVehicleDirectCharge(this.vin, this.carModel, waitForConfirmation);
   }
 }

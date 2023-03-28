@@ -1,5 +1,5 @@
 import { PlatformAccessory } from 'homebridge';
-import { VehicleConfig, VehicleEMobility } from './porsche-connect';
+import { Vehicle, VehicleConfig, VehicleEMobility } from './porsche-connect';
 
 export type PlatformVehicle = {
     vehicle: VehicleConfig;
@@ -8,5 +8,5 @@ export type PlatformVehicle = {
 
 export interface PorscheAccessory {
     accessory: PlatformAccessory;
-    update(emobilityInfo: VehicleEMobility): void;
+    beat(emobilityInfo: VehicleEMobility, vehicle: Vehicle): void;
 }
