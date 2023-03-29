@@ -28,14 +28,14 @@ export default class Charger implements PorscheAccessory {
 
     // Is battery low state
     const isLowBatteryLevel = (newBatteryLevel <= this.lowBatteryLevel);
-    if (isLowBatteryLevel !== this.batteryService.getCharacteristic(this.Characteristic.StatusLowBattery).value) {
+    if (isLowBatteryLevel !== (this.batteryService.getCharacteristic(this.Characteristic.StatusLowBattery).value === 1)) {
       this.log.debug('Low battery level state ->', isLowBatteryLevel);
     }
     this.batteryService.setCharacteristic(this.Characteristic.StatusLowBattery, isLowBatteryLevel);
 
     // Charging state
     const isCharging = emobilityInfo.batteryChargeStatus.chargingState === 'CHARGING';
-    if (isCharging !== this.batteryService.getCharacteristic(this.Characteristic.ChargingState).value) {
+    if (isCharging !== (this.batteryService.getCharacteristic(this.Characteristic.ChargingState).value === 1)) {
       this.log.debug('Charging state ->', isCharging);
     }
     this.chargerService.setCharacteristic(this.sensorType === 'occupancy' ? this.Characteristic.OccupancyDetected : this.Characteristic.ContactSensorState, isCharging);

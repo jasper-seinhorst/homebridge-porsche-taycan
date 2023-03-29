@@ -19,10 +19,10 @@ export default class DirectCharge implements PorscheAccessory {
     // Only call API when status is not changed during heartbeat
     if (this.vehicle && !this.heartBeatActive) {
       if (value) {
-        this.log.debug('Connecting with API to enableDirectCharge');
+        this.log.debug('Connecting with API to enable Direct Charge');
         this.vehicle.enableDirectCharge();
       } else {
-        this.log.debug('Connecting with API to disableDirectCharge');
+        this.log.debug('Connecting with API to disable Direct Charge');
         this.vehicle.disableDirectCharge();
       }
       return callback();

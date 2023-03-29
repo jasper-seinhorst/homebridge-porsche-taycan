@@ -52,11 +52,11 @@ export class Vehicle {
     await this.porscheConnect.disableVehicleDirectCharge(this.vin, this.carModel);
   }
 
-  public async enableClimate() {
+  public async enableDirectClimate() {
     await this.porscheConnect.enableVehicleClimate(this.vin);
   }
 
-  public async disableClimate() {
+  public async disableDirectClimate() {
     await this.porscheConnect.disableVehicleClimate(this.vin);
   }
 }

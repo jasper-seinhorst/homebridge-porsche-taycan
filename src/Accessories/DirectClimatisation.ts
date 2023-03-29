@@ -19,11 +19,11 @@ export default class DirectClimatisation implements PorscheAccessory {
     // Only call API when status is not changed during heartbeat
     if (this.vehicle && !this.heartBeatActive) {
       if (value) {
-        this.log.debug('Connecting with API to enableClimate');
-        this.vehicle.enableClimate();
+        this.log.debug('Connecting with API to enable Direct Climatisation');
+        this.vehicle.enableDirectClimate();
       } else {
-        this.log.debug('Connecting with API to disableClimate');
-        this.vehicle.disableClimate();
+        this.log.debug('Connecting with API to disable Direct Climatisation');
+        this.vehicle.disableDirectClimate();
       }
       return callback();
     }
