@@ -1,5 +1,5 @@
 # Homebridge Porsche Taycan
-This Homebrudge plugin offers a range of useful features for your Porsche Taycan, including real-time monitoring of battery level and charging status. Moreover, it also enables you to easily toggle the direct charging option on or off. 
+This Homebrudge plugin offers a range of useful features for your Porsche Taycan, including real-time monitoring of battery level and charging status. Moreover, it also enables you to easily toggle the direct charging or direct climatisation options on or off. 
 
 ## Supported cars:
 - Taycan (all years)
