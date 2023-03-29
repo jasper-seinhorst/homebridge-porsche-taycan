@@ -1,6 +1,5 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
-import Charger from './Accessories/Charger';
-import DirectCharge from './Accessories/DirectCharge';
+import { Charger, DirectCharge, DirectClimatisation } from './Accessories';
 import PorscheConnect, { EngineType, Vehicle } from './porsche-connect';
 import { PlatformVehicle, PorscheAccessory } from './PlatformTypes';
 
@@ -68,6 +67,22 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
           this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
         }
 
+        // Register DirectClimatisation
+        const directClimatisationUuid = this.api.hap.uuid.generate(`${vehicle.vin}-direct-climatisation`);
+        const directClimatisationExistingAccessory = this.accessories.find(accessory => accessory.UUID === directClimatisationUuid);
+        const directClimatisationAccessoryName = `${vehicle.modelDescription} Direct Climatisation`;
+
+        if (directClimatisationExistingAccessory) {
+          platformVehicle.accessories.push(new DirectClimatisation(this.config, this.log, this.api, directClimatisationExistingAccessory));
+        } else {
+          this.log.info('Direct Climatisation added as accessory');
+          const accessory = new this.api.platformAccessory(directClimatisationAccessoryName, directClimatisationUuid);
+          accessory.context.device = vehicle;
+          platformVehicle.accessories.push(new DirectClimatisation(this.config, this.log, this.api, accessory));
+          this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
+        }
+
+        // Register car for heart beat
         this.platformVehicles.push(platformVehicle);
       } else {
         this.log.info(`Your Porsche ${vehicle.modelDescription} is not supported, it has an unsupported engine type ${vehicle.engineType}`);

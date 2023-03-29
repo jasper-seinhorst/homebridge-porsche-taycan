@@ -28,6 +28,11 @@ export class Routes {
     return `https://api.porsche.com/e-mobility/${this.env.country}/${this.env.locale}/${carModel}/${vin}/toggle-direct-charging/${action}`;
   }
 
+  public vehicleToggleClimateURL(vin: string, on: boolean): string {
+    const action = on ? 'true' : 'false';
+    return `https://api.porsche.com/e-mobility/${this.env.country}/${this.env.locale}/${vin}/toggle-direct-climatisation/${action}`;
+  }
+
   public vehiclePermissionsURL(vin: string): string {
     return `https://api.porsche.com/core/api/v2/${this.env.country}/${this.env.locale}/vehicles/${vin}/permissions`;
   }

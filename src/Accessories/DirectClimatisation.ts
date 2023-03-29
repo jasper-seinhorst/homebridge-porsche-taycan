@@ -2,7 +2,7 @@ import { Service, PlatformAccessory, PlatformConfig, Logger, API, Characteristic
 import { PorscheAccessory } from '../PlatformTypes';
 import { VehicleEMobility, Vehicle } from '../porsche-connect';
 
-export default class DirectCharge implements PorscheAccessory {
+export default class DirectClimatisation implements PorscheAccessory {
   public readonly Service: typeof Service = this.api.hap.Service;
   public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
   private switchService: Service;
@@ -19,11 +19,11 @@ export default class DirectCharge implements PorscheAccessory {
     // Only call API when status is not changed during heartbeat
     if (this.vehicle && !this.heartBeatActive) {
       if (value) {
-        this.log.debug('Connecting with API to enableDirectCharge');
-        this.vehicle.enableDirectCharge();
+        this.log.debug('Connecting with API to enableClimate');
+        this.vehicle.enableClimate();
       } else {
-        this.log.debug('Connecting with API to disableDirectCharge');
-        this.vehicle.disableDirectCharge();
+        this.log.debug('Connecting with API to disableClimate');
+        this.vehicle.disableClimate();
       }
       return callback();
     }
@@ -35,11 +35,11 @@ export default class DirectCharge implements PorscheAccessory {
     this.heartBeatActive = true;
     this.vehicle = vehicle;
 
-    const isDirectChargeActive = !!emobilityInfo.directCharge.isActive;
-    if (isDirectChargeActive !== this.switchService.getCharacteristic(this.Characteristic.On).value) {
-      this.log.debug('Direct Charge ->', isDirectChargeActive ? 'ON' : 'OFF');
+    const isDirectClimatisationActive = !!(emobilityInfo.directClimatisation.climatisationState === 'ON');
+    if (isDirectClimatisationActive !== this.switchService.getCharacteristic(this.Characteristic.On).value) {
+      this.log.debug('Direct Climatisation ->', isDirectClimatisationActive ? 'ON' : 'OFF');
     }
-    this.switchService.setCharacteristic(this.Characteristic.On, isDirectChargeActive);
+    this.switchService.setCharacteristic(this.Characteristic.On, isDirectClimatisationActive);
 
     this.heartBeatActive = false;
   }
