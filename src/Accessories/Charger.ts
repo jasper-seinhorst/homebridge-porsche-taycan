@@ -11,6 +11,11 @@ export default class Charger implements PorscheAccessory {
   private sensorType: 'occupancy' | 'contact';
 
   constructor(public config: PlatformConfig, public readonly log: Logger, public readonly api: API, public accessory: PlatformAccessory) {
+    this.accessory.getService(this.Service.AccessoryInformation)!
+      .setCharacteristic(this.Characteristic.Manufacturer, 'homebridge-porsche-taycan')
+      .setCharacteristic(this.Characteristic.Model, this.accessory.context.device.modelDescription)
+      .setCharacteristic(this.Characteristic.SerialNumber, this.accessory.context.device.vin);
+
     this.lowBatteryLevel = this.config.lowBattery || 35;
     this.sensorType = this.config.chargerDevice || 'occupancy';
     this.chargerService = this.accessory.getService(this.sensorType === 'occupancy' ? this.Service.OccupancySensor : this.Service.ContactSensor)
