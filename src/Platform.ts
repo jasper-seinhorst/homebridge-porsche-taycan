@@ -1,5 +1,5 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
-import { Charger, DirectCharge, DirectClimatisation } from './Accessories';
+import { Battery, Charger, DirectCharge, DirectClimatisation } from './Accessories';
 import PorscheConnect, { EngineType, Vehicle } from './porsche-connect';
 import { PlatformVehicle, PorscheAccessory } from './PlatformTypes';
 
@@ -92,6 +92,22 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
             accessory.context.device = vehicle;
             platformVehicle.accessories.push(new DirectClimatisation(this.config, this.log, this.api, accessory));
             this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
+          }
+
+          // (Optionally) Register Battery
+          if (this.config.batteryDevice === true) {
+            const batteryUuid = this.api.hap.uuid.generate(`${vehicle.vin}-battery`);
+            const batteryExistingAccessory = this.accessories.find(accessory => accessory.UUID === batteryUuid);
+
+            if (batteryExistingAccessory) {
+              platformVehicle.accessories.push(new Battery(this.config, this.log, this.api, batteryExistingAccessory));
+            } else {
+              this.log.info('Battery added as accessory');
+              const accessory = new this.api.platformAccessory('Battery', batteryUuid);
+              accessory.context.device = vehicle;
+              platformVehicle.accessories.push(new Battery(this.config, this.log, this.api, accessory));
+              this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
+            }
           }
 
           // Register car for heart beat

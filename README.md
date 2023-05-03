@@ -21,6 +21,7 @@ To install Homebridge Porsche Taycan follow these steps:
         "password": "<<Porsche Connect password>>",
         "pollInterval": 30,
         "chargerDevice": "occupancy",
+        "batteryDevice": false,
         "lowBattery": 40,
         "platform": "PorscheTaycan"
     }

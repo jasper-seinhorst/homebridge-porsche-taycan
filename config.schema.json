@@ -42,6 +42,12 @@
           }
         ]
       },
+      "batteryDevice": {
+        "title": "Expose SoC as humidity sensor",
+        "default": false,
+        "type": "boolean",
+        "description": "By default, the SoC is exposed as characteristic of the charger device. However, it's possible to configure the SoC to be presented as humidity sensor instead, which allows for incorporating SoC-based automations within the Home app."
+      },
       "lowBattery": {
         "title": "Low battery level",
         "type": "integer",
