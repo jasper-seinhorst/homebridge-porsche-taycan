@@ -10,14 +10,14 @@ export default class DirectClimatisation implements PorscheAccessory {
   private heartBeatActive = false;
 
   constructor(public config: PlatformConfig, public readonly log: Logger, public readonly api: API, public accessory: PlatformAccessory) {
-        this.accessory.getService(this.Service.AccessoryInformation)!
-          .setCharacteristic(this.Characteristic.Manufacturer, 'homebridge-porsche-taycan')
-          .setCharacteristic(this.Characteristic.Model, this.accessory.context.device.modelDescription)
-          .setCharacteristic(this.Characteristic.SerialNumber, this.accessory.context.device.vin);
+    this.accessory.getService(this.Service.AccessoryInformation)!
+      .setCharacteristic(this.Characteristic.Manufacturer, 'Porsche')
+      .setCharacteristic(this.Characteristic.Model, this.accessory.context.device.modelDescription)
+      .setCharacteristic(this.Characteristic.SerialNumber, this.accessory.context.device.vin);
 
-        this.switchService = this.accessory.getService(this.Service.Switch) || this.accessory.addService(this.Service.Switch);
-        this.switchService.getCharacteristic(this.Characteristic.On).on('set', this.setStatus.bind(this));
-        this.switchService.setCharacteristic(this.Characteristic.On, false);
+    this.switchService = this.accessory.getService(this.Service.Switch) || this.accessory.addService(this.Service.Switch);
+    this.switchService.getCharacteristic(this.Characteristic.On).on('set', this.setStatus.bind(this));
+    this.switchService.setCharacteristic(this.Characteristic.On, false);
   }
 
   private async setStatus(value, callback) {

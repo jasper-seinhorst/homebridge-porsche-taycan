@@ -12,7 +12,7 @@ export default class Charger implements PorscheAccessory {
 
   constructor(public config: PlatformConfig, public readonly log: Logger, public readonly api: API, public accessory: PlatformAccessory) {
     this.accessory.getService(this.Service.AccessoryInformation)!
-      .setCharacteristic(this.Characteristic.Manufacturer, 'homebridge-porsche-taycan')
+      .setCharacteristic(this.Characteristic.Manufacturer, 'Porsche')
       .setCharacteristic(this.Characteristic.Model, this.accessory.context.device.modelDescription)
       .setCharacteristic(this.Characteristic.SerialNumber, this.accessory.context.device.vin);
 
