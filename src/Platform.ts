@@ -42,6 +42,7 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
       }, this.heartBeatInterval);
     } catch(error) {
       this.log.error('Porsche Connect connection failed');
+      this.log.debug('Reason: ', error);
     }
   }
 
@@ -124,6 +125,12 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
       this.log.info(`Updating vehicle data for ${platformVehicle.vehicle.modelDescription}`);
       const vehicle = new Vehicle(this.PorscheConnectAuth, platformVehicle.vehicle);
       const emobilityInfo = await vehicle.getEmobilityInfo();
+
+      if (emobilityInfo.batteryChargeStatus === null) {
+        this.log.error('Your PCM seems to be in private mode');
+        this.log.debug('Reason: ', emobilityInfo);
+        return;
+      }
 
       platformVehicle.accessories.forEach((accessory: PorscheAccessory) => {
         accessory.beat(emobilityInfo, vehicle);

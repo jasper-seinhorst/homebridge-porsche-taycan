@@ -12,8 +12,12 @@ export class PorscheAuthError extends Error {}
 
 export abstract class PorscheConnectAuth extends PorscheConnectBase {
   protected isAuthorized(app: Application): boolean {
-    if (this.auths[app.toString()] === undefined) return false;
-    if (this.auths[app.toString()].isExpired) return false;
+    if (this.auths[app.toString()] === undefined) {
+      return false;
+    }
+    if (this.auths[app.toString()].isExpired) {
+      return false;
+    }
 
     return true;
   }
@@ -39,12 +43,13 @@ export abstract class PorscheConnectAuth extends PorscheConnectBase {
       const result = await this.client.post(this.routes.loginAuthURL, formBody, { maxRedirects: 30 });
       if (result.headers['cdn-original-uri'] && result.headers['cdn-original-uri'].includes('state=WRONG_CREDENTIALS')) {
         throw new WrongCredentialsError();
-      }
-      else if(result.headers['cdn-original-uri'] && result.headers['cdn-original-uri'].includes('state=ACCOUNT_TEMPORARILY_LOCKED')) {
+      } else if(result.headers['cdn-original-uri'] && result.headers['cdn-original-uri'].includes('state=ACCOUNT_TEMPORARILY_LOCKED')) {
         throw new AccountTemporarilyLocked();
       }
     } catch (e: any) {
-      if(axios.isAxiosError(e) && e.response && e.response.status && e.response.status >= 500 && e.response.status <= 503) throw new PorscheServerError();
+      if(axios.isAxiosError(e) && e.response && e.response.status && e.response.status >= 500 && e.response.status <= 503) {
+        throw new PorscheServerError();
+      }
       throw new PorscheAuthError();
     }
   }
@@ -64,8 +69,8 @@ export abstract class PorscheConnectAuth extends PorscheConnectBase {
           response_type: 'code',
           access_type: 'offline',
           prompt: 'none',
-          code_challenge_method: 'S256'
-        }
+          code_challenge_method: 'S256',
+        },
       });
       const url = new URL(result.headers['cdn-original-uri'], 'http://127.0.0.1');
       const apiAuthCode = url.searchParams.get('code');
@@ -84,7 +89,7 @@ export abstract class PorscheConnectAuth extends PorscheConnectBase {
       code: code,
       code_verifier: codeVerifier,
       prompt: 'none',
-      grant_type: 'authorization_code'
+      grant_type: 'authorization_code',
     };
     const formBody = this.buildPostFormBody(apiTokenBody);
 
