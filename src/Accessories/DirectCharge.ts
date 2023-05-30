@@ -42,7 +42,7 @@ export default class DirectCharge implements PorscheAccessory {
 
     const isDirectChargeActive = !!emobilityInfo.directCharge.isActive;
     if (isDirectChargeActive !== this.switchService.getCharacteristic(this.Characteristic.On).value) {
-      this.log.debug('Direct Charge ->', isDirectChargeActive ? 'ON' : 'OFF');
+      this.log.info('Direct Charge ->', isDirectChargeActive ? 'ON' : 'OFF');
     }
     this.switchService.setCharacteristic(this.Characteristic.On, isDirectChargeActive);
 

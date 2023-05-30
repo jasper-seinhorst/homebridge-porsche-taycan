@@ -36,8 +36,8 @@ export abstract class PorscheConnectAuth extends PorscheConnectBase {
     this.auths[app.toString()] = await this.getApiToken(app, apiAuthCode, codeVerifier);
   }
 
-  private async loginToRetrieveCookies() {
-    const loginBody = { username: this.username, password: this.password, keeploggedin: 'false', sec: '', resume: '', thirdPartyId: '', state: '' };
+  private async loginToRetrieveCookies(attempt = 0) {
+    const loginBody = { username: this.username, password: this.password, keeploggedin: 'true', sec: '', resume: '', thirdPartyId: '', state: '' };
     const formBody = this.buildPostFormBody(loginBody);
     try {
       const result = await this.client.post(this.routes.loginAuthURL, formBody, { maxRedirects: 30 });
@@ -50,7 +50,16 @@ export abstract class PorscheConnectAuth extends PorscheConnectBase {
       if(axios.isAxiosError(e) && e.response && e.response.status && e.response.status >= 500 && e.response.status <= 503) {
         throw new PorscheServerError();
       }
-      throw new PorscheAuthError();
+
+      if (attempt <= 3) {
+        console.log('e', attempt);
+        await this.sleep(2500);
+        await this.loginToRetrieveCookies(attempt + 1);
+        return;
+      } else {
+        console.log('e', attempt);
+        // throw new PorscheAuthError();
+      }
     }
   }
 
@@ -104,5 +113,9 @@ export abstract class PorscheConnectAuth extends PorscheConnectBase {
     } catch (e) {
       throw new PorscheAuthError();
     }
+  }
+
+  private async sleep(ms: number) {
+    return new Promise((r) => setTimeout(r, ms));
   }
 }

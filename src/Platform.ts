@@ -33,17 +33,19 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
     }
 
     try {
+      this.log.info('Authentication');
       this.PorscheConnectAuth = new PorscheConnect({ username: this.config.username, password: this.config.password });
+      this.log.info('Retrieving available vehicles');
       await this.discoverVehicles();
-
-      this.heartBeat();
-      setInterval(() => {
-        this.heartBeat();
-      }, this.heartBeatInterval);
-    } catch(error) {
+    } catch (error) {
       this.log.error('Porsche Connect connection failed');
       this.log.debug('Reason: ', error);
     }
+
+    await this.heartBeat();
+    setInterval(() => {
+      this.heartBeat();
+    }, this.heartBeatInterval);
   }
 
   private async discoverVehicles() {

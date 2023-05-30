@@ -42,7 +42,7 @@ export default class DirectClimatisation implements PorscheAccessory {
 
     const isDirectClimatisationActive = !!(emobilityInfo.directClimatisation.climatisationState === 'ON');
     if (isDirectClimatisationActive !== this.switchService.getCharacteristic(this.Characteristic.On).value) {
-      this.log.debug('Direct Climatisation ->', isDirectClimatisationActive ? 'ON' : 'OFF');
+      this.log.info('Direct Climatisation ->', isDirectClimatisationActive ? 'ON' : 'OFF');
     }
     this.switchService.setCharacteristic(this.Characteristic.On, isDirectClimatisationActive);
 
