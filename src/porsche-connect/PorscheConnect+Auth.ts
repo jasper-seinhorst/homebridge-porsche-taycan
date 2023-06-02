@@ -51,15 +51,12 @@ export abstract class PorscheConnectAuth extends PorscheConnectBase {
         throw new PorscheServerError();
       }
 
-      if (attempt <= 3) {
-        console.log('e', attempt);
-        await this.sleep(2500);
+      if (attempt <= 5) {
+        await this.sleep(5000);
         await this.loginToRetrieveCookies(attempt + 1);
-        return;
-      } else {
-        console.log('e', attempt);
-        // throw new PorscheAuthError();
       }
+
+      return;
     }
   }
 

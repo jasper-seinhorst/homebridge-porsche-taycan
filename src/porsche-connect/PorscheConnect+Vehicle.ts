@@ -9,18 +9,6 @@ export abstract class PorscheConnectVehicle extends PorscheConnectBase {
     return res.data;
   }
 
-  private async toggleVehicleDirectCharge(vin: string, carModel: string, on: boolean) {
-    await this.postToApi(this.routes.vehicleToggleDirectChargingURL(vin, carModel, on));
-  }
-
-  public async enableVehicleDirectCharge(vin: string, carModel: string) {
-    await this.toggleVehicleDirectCharge(vin, carModel, true);
-  }
-
-  public async disableVehicleDirectCharge(vin: string, carModel: string) {
-    await this.toggleVehicleDirectCharge(vin, carModel, false);
-  }
-
   private async toggleVehicleClimate(vin: string, on: boolean) {
     await this.postToApi(this.routes.vehicleToggleClimateURL(vin, on));
   }

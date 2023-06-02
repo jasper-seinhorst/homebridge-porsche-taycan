@@ -44,14 +44,6 @@ export class Vehicle {
     }
   }
 
-  public async enableDirectCharge() {
-    await this.porscheConnect.enableVehicleDirectCharge(this.vin, this.carModel);
-  }
-
-  public async disableDirectCharge() {
-    await this.porscheConnect.disableVehicleDirectCharge(this.vin, this.carModel);
-  }
-
   public async enableDirectClimate() {
     await this.porscheConnect.enableVehicleClimate(this.vin);
   }

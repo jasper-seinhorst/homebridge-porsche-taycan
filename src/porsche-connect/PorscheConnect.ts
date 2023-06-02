@@ -22,7 +22,7 @@ export class PorscheConnect extends PorscheConnectBase {
           const data = await Promise.allSettled([
             await this.getFromApi(this.routes.vehicleCapabilitiesURL(v.vin)),
             await this.getFromApi(this.routes.vehicleSummaryURL(v.vin)),
-            await this.getFromApi(this.routes.vehiclePermissionsURL(v.vin))
+            await this.getFromApi(this.routes.vehiclePermissionsURL(v.vin)),
           ]);
 
           const capabilities = data[0].status == 'fulfilled' ? data[0].value.data : {};
@@ -46,13 +46,13 @@ export class PorscheConnect extends PorscheConnectBase {
               hasHonkAndFlash: capabilities.hasHonkAndFlash,
               heating: {
                 hasFrontSeatHeating: capabilities.heatingCapabilities.frontSeatHeatingAvailable,
-                hasRearSeatHeating: capabilities.heatingCapabilities.rearSeatHeatingAvailable
-              }
+                hasRearSeatHeating: capabilities.heatingCapabilities.rearSeatHeatingAvailable,
+              },
             },
             permissions: {
               userIsActive: permissions.userIsActive,
-              userRoleStatus: permissions.userRoleStatus
-            }
+              userRoleStatus: permissions.userRoleStatus,
+            },
           };
 
           if (Array.isArray(v.pictures)) {
@@ -63,13 +63,13 @@ export class PorscheConnect extends PorscheConnectBase {
                 height: picture.height,
                 url: picture.url,
                 view: picture.view,
-                transparent: picture.transparent
+                transparent: picture.transparent,
               });
             }
           }
 
           vehicles.push(new Vehicle(this, vehicleConfig));
-        })
+        }),
       );
     }
 
@@ -82,18 +82,19 @@ export class PorscheConnect extends PorscheConnectBase {
     const auth = await this.authIfRequired(app);
     const headers = {
       Authorization: `Bearer ${auth.accessToken}`,
-      origin: `https://my.porsche.com`,
+      origin: 'https://my.porsche.com',
       apikey: auth.apiKey,
       'x-vrs-url-country': this.env.country,
-      'x-vrs-url-language': this.env.locale
+      'x-vrs-url-language': this.env.locale,
     };
 
     try {
-      let result = await this.client.get(url, { headers });
+      const result = await this.client.get(url, { headers });
       return result;
     } catch (e: any) {
-      if (axios.isAxiosError(e) && e.response && e.response.status && e.response.status >= 500 && e.response.status <= 503)
+      if (axios.isAxiosError(e) && e.response && e.response.status && e.response.status >= 500 && e.response.status <= 503) {
         throw new PorscheServerError();
+      }
       throw new PorscheError();
     }
   }
@@ -129,20 +130,26 @@ export class PorscheConnect extends PorscheConnectBase {
     const auth = await this.authIfRequired(app);
     const headers = {
       Authorization: `Bearer ${auth.accessToken}`,
-      origin: `https://my.porsche.com`,
+      origin: 'https://my.porsche.com',
       apikey: auth.apiKey,
       'x-vrs-url-country': this.env.country,
-      'x-vrs-url-language': this.env.locale
+      'x-vrs-url-language': this.env.locale,
     };
 
     try {
-      let result = await this.client.post(url, body, { headers });
+      const result = await this.client.post(url, body, { headers });
       return result;
     } catch (e: any) {
       if (axios.isAxiosError(e) && e.response) {
-        if (e.response.data) console.log('Porsche error: ', e.response.data);
-        if (e.response.data && e.response.data['pcckErrorKey'] == 'GRAY_SLICE_ERROR_UNKNOWN_MSG') throw new PorschePrivacyError();
-        if (e.response.status && e.response.status >= 500 && e.response.status <= 503) throw new PorscheServerError();
+        if (e.response.data) {
+          return e.response;
+        }
+        if (e.response.data && e.response.data['pcckErrorKey'] == 'GRAY_SLICE_ERROR_UNKNOWN_MSG') {
+          throw new PorschePrivacyError();
+        }
+        if (e.response.status && e.response.status >= 500 && e.response.status <= 503) {
+          throw new PorscheServerError();
+        }
       }
       throw new PorscheError();
     }
