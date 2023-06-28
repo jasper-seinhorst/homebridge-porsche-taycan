@@ -32,6 +32,6 @@ To install Homebridge Porsche Taycan follow these steps:
 
 
 ## Credits
-This plugin is not an official plugin from Porsche. The Porsche Connect API endpoints are reverse engineered on MyPorsche with help of Google Chrome Dev tools.
+This plugin is not an official plugin from Porsche. The usage of Porsche Connect API endpoints are reverse engineered on MyPorsche with help of Google Chrome Dev tools. It uses the unofficial 'porsche-connect' node package to communicate to Porsches servers.
 
 This plugin started as a hobby project but is now available to the public. Pull requests to improve the plugins are welcome. 
