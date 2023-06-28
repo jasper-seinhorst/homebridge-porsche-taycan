@@ -1,6 +1,6 @@
 import { Service, PlatformAccessory, PlatformConfig, Logger, API, Characteristic } from 'homebridge';
 import { PorscheAccessory } from '../PlatformTypes';
-import { VehicleEMobility } from '../porsche-connect';
+import { VehicleEMobility } from 'porsche-connect';
 
 export default class Charger implements PorscheAccessory {
   public readonly Service: typeof Service = this.api.hap.Service;

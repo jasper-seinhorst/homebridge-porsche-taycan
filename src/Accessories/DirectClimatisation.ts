@@ -1,6 +1,6 @@
 import { Service, PlatformAccessory, PlatformConfig, Logger, API, Characteristic } from 'homebridge';
 import { PorscheAccessory } from '../PlatformTypes';
-import { VehicleEMobility, Vehicle } from '../porsche-connect';
+import { VehicleEMobility, Vehicle } from 'porsche-connect';
 
 export default class DirectClimatisation implements PorscheAccessory {
   public readonly Service: typeof Service = this.api.hap.Service;
@@ -25,10 +25,10 @@ export default class DirectClimatisation implements PorscheAccessory {
     if (this.vehicle && !this.heartBeatActive) {
       if (value) {
         this.log.debug('Connecting with API to enable Direct Climatisation');
-        await this.vehicle.enableDirectClimate();
+        await this.vehicle.enableClimate();
       } else {
         this.log.debug('Connecting with API to disable Direct Climatisation');
-        await this.vehicle.disableDirectClimate();
+        await this.vehicle.disableClimate();
       }
       return callback();
     }

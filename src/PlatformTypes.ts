@@ -1,8 +1,8 @@
 import { PlatformAccessory } from 'homebridge';
-import { Vehicle, VehicleConfig, VehicleEMobility } from './porsche-connect';
+import { Vehicle, VehicleEMobility } from 'porsche-connect';
 
 export type PlatformVehicle = {
-    vehicle: VehicleConfig;
+    vehicle: Vehicle;
     accessories: PorscheAccessory[];
 };
 
