@@ -7,6 +7,7 @@ This Homebrudge plugin offers a range of useful features for your Porsche Taycan
 - Taycan (all years)
 - Taycan Sport Turismo (all years)
 - Taycan Cross Turismo (all years)
+- Macan (MY 25+)
 
 ## Installation
 To install Homebridge Porsche Taycan follow these steps:
