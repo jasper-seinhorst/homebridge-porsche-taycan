@@ -1,6 +1,6 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
 import { Battery, Charger, DirectClimatisation } from './Accessories';
-import PorscheConnect, { EngineType, Environment } from 'porsche-connect';
+import PorscheConnect, { EngineType } from 'porsche-connect';
 import { PlatformVehicle, PorscheAccessory } from './PlatformTypes';
 
 export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
@@ -53,9 +53,7 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
   private async discoverVehicles() {
     if (this.PorscheConnectAuth) {
       const vehicles = await this.PorscheConnectAuth.getVehicles();
-
-      console.log(vehicles);
-
+      
       for (const vehicle of vehicles) {
         if (vehicle.engineType === EngineType.BatteryPowered) {
           const platformVehicle: PlatformVehicle = { vehicle, accessories: [] };
