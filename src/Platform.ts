@@ -1,6 +1,6 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
 import { Battery, Charger, DirectClimatisation } from './Accessories';
-import PorscheConnect, { EngineType } from 'porsche-connect';
+import PorscheConnect, { EngineType, Environment } from 'porsche-connect';
 import { PlatformVehicle, PorscheAccessory } from './PlatformTypes';
 
 export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
@@ -33,16 +33,18 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
     }
 
     try {
+      // 'nl', 'nl_NL', 'Europe/Amsterdam'
       this.log.info('Authentication');
-      this.PorscheConnectAuth = new PorscheConnect({ username: this.config.username, password: this.config.password });
-      this.log.info('Retrieving available vehicles');
-      await this.discoverVehicles();
+      this.PorscheConnectAuth = new PorscheConnect({ username: this.config.username, password: this.config.password});
     } catch (error) {
       this.log.error('Porsche Connect connection failed');
       this.log.debug('Reason: ', error);
     }
 
+    this.log.info('Retrieving available vehicles');
+    await this.discoverVehicles();
     await this.heartBeat();
+
     setInterval(() => {
       this.heartBeat();
     }, this.heartBeatInterval);
@@ -51,6 +53,9 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
   private async discoverVehicles() {
     if (this.PorscheConnectAuth) {
       const vehicles = await this.PorscheConnectAuth.getVehicles();
+
+      console.log(vehicles);
+
       for (const vehicle of vehicles) {
         if (vehicle.engineType === EngineType.BatteryPowered) {
           const platformVehicle: PlatformVehicle = { vehicle, accessories: [] };
