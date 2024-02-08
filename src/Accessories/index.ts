@@ -1,9 +1,9 @@
 import Battery from './Battery';
 import Charger from './Charger';
-import DirectClimatisation from './DirectClimatisation';
+import PrecoolHeat from './PrecoolHeat';
 
 export {
   Battery,
   Charger,
-  DirectClimatisation,
+  PrecoolHeat,
 };

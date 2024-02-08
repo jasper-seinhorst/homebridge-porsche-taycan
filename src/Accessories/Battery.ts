@@ -20,7 +20,7 @@ export default class Charger implements PorscheAccessory {
     // Battery level
     const newBatteryLevel = emobilityInfo.batteryChargeStatus.stateOfChargeInPercentage;
     if (newBatteryLevel !== this.batteryDevice.getCharacteristic(this.Characteristic.CurrentRelativeHumidity).value) {
-      this.log.debug('Battery level ->', newBatteryLevel);
+      this.log.info('Battery level ->', newBatteryLevel);
     }
     this.batteryDevice.setCharacteristic(this.Characteristic.CurrentRelativeHumidity, newBatteryLevel);
   }

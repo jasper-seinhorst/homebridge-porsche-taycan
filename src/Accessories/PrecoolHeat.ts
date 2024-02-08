@@ -2,7 +2,7 @@ import { Service, PlatformAccessory, PlatformConfig, Logger, API, Characteristic
 import { PorscheAccessory } from '../PlatformTypes';
 import { VehicleEMobility, Vehicle } from 'porsche-connect';
 
-export default class DirectClimatisation implements PorscheAccessory {
+export default class PrecoolHeat implements PorscheAccessory {
   public readonly Service: typeof Service = this.api.hap.Service;
   public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
   private switchService: Service;
@@ -24,10 +24,10 @@ export default class DirectClimatisation implements PorscheAccessory {
     // Only call API when status is not changed during heartbeat
     if (this.vehicle && !this.heartBeatActive) {
       if (value) {
-        this.log.debug('Connecting with API to enable Direct Climatisation');
+        this.log.debug('Connecting with API to start Precool/heat');
         await this.vehicle.enableClimate();
       } else {
-        this.log.debug('Connecting with API to disable Direct Climatisation');
+        this.log.debug('Connecting with API to stop Precool/heat');
         await this.vehicle.disableClimate();
       }
       return callback();
@@ -40,11 +40,11 @@ export default class DirectClimatisation implements PorscheAccessory {
     this.heartBeatActive = true;
     this.vehicle = vehicle;
 
-    const isDirectClimatisationActive = !!(emobilityInfo.directClimatisation.climatisationState === 'ON');
-    if (isDirectClimatisationActive !== this.switchService.getCharacteristic(this.Characteristic.On).value) {
-      this.log.info('Direct Climatisation ->', isDirectClimatisationActive ? 'ON' : 'OFF');
+    const isPrecoolHeatActive = !!(emobilityInfo.directClimatisation.climatisationState === 'ON');
+    if (isPrecoolHeatActive !== this.switchService.getCharacteristic(this.Characteristic.On).value) {
+      this.log.info('Precool/heat ->', isPrecoolHeatActive ? 'ON' : 'OFF');
     }
-    this.switchService.setCharacteristic(this.Characteristic.On, isDirectClimatisationActive);
+    this.switchService.setCharacteristic(this.Characteristic.On, isPrecoolHeatActive);
 
     this.heartBeatActive = false;
   }

@@ -1,5 +1,5 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
-import { Battery, Charger, DirectClimatisation } from './Accessories';
+import { Battery, Charger, PrecoolHeat } from './Accessories';
 import PorscheConnect, { EngineType } from 'porsche-connect';
 import { PlatformVehicle, PorscheAccessory } from './PlatformTypes';
 
@@ -72,17 +72,17 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
             this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
           }
 
-          // Register DirectClimatisation
-          const directClimatisationUuid = this.api.hap.uuid.generate(`${vehicle.vin}-direct-climatisation`);
-          const directClimatisationExistingAccessory = this.accessories.find(accessory => accessory.UUID === directClimatisationUuid);
+          // Register Precool / heat
+          const precoolHeatUuid = this.api.hap.uuid.generate(`${vehicle.vin}-precool-heat`);
+          const precoolHeatExistingAccessory = this.accessories.find(accessory => accessory.UUID === precoolHeatUuid);
 
-          if (directClimatisationExistingAccessory) {
-            platformVehicle.accessories.push(new DirectClimatisation(this.config, this.log, this.api, directClimatisationExistingAccessory));
+          if (precoolHeatExistingAccessory) {
+            platformVehicle.accessories.push(new PrecoolHeat(this.config, this.log, this.api, precoolHeatExistingAccessory));
           } else {
-            this.log.info('Direct Climatisation added as accessory');
-            const accessory = new this.api.platformAccessory('Direct Climatisation', directClimatisationUuid);
+            this.log.info('Precool/heat added as accessory');
+            const accessory = new this.api.platformAccessory('Precool/heat', precoolHeatUuid);
             accessory.context.device = vehicle;
-            platformVehicle.accessories.push(new DirectClimatisation(this.config, this.log, this.api, accessory));
+            platformVehicle.accessories.push(new PrecoolHeat(this.config, this.log, this.api, accessory));
             this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
           }
 
