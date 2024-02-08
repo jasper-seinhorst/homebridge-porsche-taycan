@@ -53,7 +53,7 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
   private async discoverVehicles() {
     if (this.PorscheConnectAuth) {
       const vehicles = await this.PorscheConnectAuth.getVehicles();
-      
+
       for (const vehicle of vehicles) {
         if (vehicle.engineType === EngineType.BatteryPowered) {
           const platformVehicle: PlatformVehicle = { vehicle, accessories: [] };
