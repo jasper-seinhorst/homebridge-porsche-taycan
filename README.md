@@ -1,13 +1,11 @@
 # Homebridge Porsche Taycan
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 
-This Homebrudge plugin offers a range of useful features for your Porsche Taycan, including real-time monitoring of battery level and charging status. Moreover, it also enables you to easily toggle the direct climatisation option on or off. 
+This Homebrudge plugin offers a range of useful features for your Porsche Taycan and Macan EV, including real-time monitoring of battery level and charging status. Moreover, it also enables you to easily toggle the direct climatisation option on or off. 
 
 ## Supported cars:
-- Taycan (all years)
-- Taycan Sport Turismo (all years)
-- Taycan Cross Turismo (all years)
-- Macan (MY 25+)
+- Taycan (MY19 and newer)
+- Macan EV (MY25 and newer)
 
 ## Installation
 To install Homebridge Porsche Taycan follow these steps:
