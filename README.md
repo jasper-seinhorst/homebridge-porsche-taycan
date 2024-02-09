@@ -29,6 +29,9 @@ To install Homebridge Porsche Taycan follow these steps:
     ```
   In above example the charging state and battery level are updated every 30 minutes. The charging state is exposed as an occupancy sensor. The battery level is considered low when the SoC drops below 40.
 
+## Caveats
+- The plugin can throw authentication errors. The login method used from Porsche's API expects a captcha now and then. As a work around logon to my.porsche.com and restart the plugin. Logging in on my.porsche.com reset the need for a captcha.
+- Precool/heat cools or heats your vehicle on activation, the desired temperature can only be changed in the My Porsche app when setting a charge timer.
 
 ## Credits
 This plugin is not an official plugin from Porsche. The usage of Porsche Connect API endpoints are reverse engineered on MyPorsche with help of Google Chrome Dev tools. It uses the unofficial 'porsche-connect' node package to communicate to Porsches servers.
