@@ -27,7 +27,13 @@
         "title": "Expose SoC as humidity sensor",
         "default": false,
         "type": "boolean",
-        "description": "By default, the SoC is exposed as characteristic of the charger device. However, it's possible to configure the SoC to be presented as humidity sensor instead, which allows for incorporating SoC-based automations within the Home app."
+        "description": "By default, the SoC (State of Charge / battery level) is exposed as characteristic of the charger device. However, it's possible to configure the SoC to be presented as humidity sensor instead, which allows for incorporating SoC-based automations within the Home app."
+      },
+      "chargingPowerDevice": {
+        "title": "Expose Charging Power as sensor",
+        "default": false,
+        "type": "boolean",
+        "description": "Expose current Charging Power (kw/h) as Ambient Light sensor (Lux). E.g. 0 Lux reflects 0 kw/h and 10,7 Lux reflect 10,7 kw/h"
       },
       "lowBattery": {
         "title": "Low battery level",
