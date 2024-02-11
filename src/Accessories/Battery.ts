@@ -2,7 +2,7 @@ import { Service, PlatformAccessory, PlatformConfig, Logger, API, Characteristic
 import { PorscheAccessory } from '../PlatformTypes';
 import { VehicleEMobility } from 'porsche-connect';
 
-export default class Charger implements PorscheAccessory {
+export default class Battery implements PorscheAccessory {
   public readonly Service: typeof Service = this.api.hap.Service;
   public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
   private batteryDevice: Service;
@@ -19,9 +19,6 @@ export default class Charger implements PorscheAccessory {
   public beat(emobilityInfo: VehicleEMobility) {
     // Battery level
     const newBatteryLevel = emobilityInfo.batteryChargeStatus.stateOfChargeInPercentage;
-    if (newBatteryLevel !== this.batteryDevice.getCharacteristic(this.Characteristic.CurrentRelativeHumidity).value) {
-      this.log.info('Battery level ->', newBatteryLevel);
-    }
     this.batteryDevice.setCharacteristic(this.Characteristic.CurrentRelativeHumidity, newBatteryLevel);
   }
 }

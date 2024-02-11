@@ -27,10 +27,12 @@
     "homebridge-plugin",
     "porsche",
     "taycan",
+    "macan",
     "homekit",
     "vehicle",
     "battery",
-    "electric vehicle"
+    "electric vehicle",
+    "ev"
   ],
   "devDependencies": {
     "@types/node": "^20.2.5",

@@ -1,5 +1,5 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
-import { Battery, Charger, PrecoolHeat } from './Accessories';
+import { Battery, Charger, PrecoolHeat, DirectCharge, ChargingPower } from './Accessories';
 import PorscheConnect, { EngineType } from 'porsche-connect';
 import { PlatformVehicle, PorscheAccessory } from './PlatformTypes';
 
@@ -33,7 +33,6 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
     }
 
     try {
-      // 'nl', 'nl_NL', 'Europe/Amsterdam'
       this.log.info('Authentication');
       this.PorscheConnectAuth = new PorscheConnect({ username: this.config.username, password: this.config.password});
     } catch (error) {
@@ -56,6 +55,7 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
 
       for (const vehicle of vehicles) {
         if (vehicle.engineType === EngineType.BatteryPowered) {
+          this.log.info(`Initializing ${vehicle.nickname}`);
           const platformVehicle: PlatformVehicle = { vehicle, accessories: [] };
 
           // Register Charger
@@ -86,26 +86,56 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
             this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
           }
 
+          // Register Direct charge
+          if (this.config.directCharge === true) {
+            const directChargeUuid = this.api.hap.uuid.generate(`${vehicle.vin}-direct-charge`);
+            const directChargeExistingAccessory = this.accessories.find(accessory => accessory.UUID === directChargeUuid);
+
+            if (directChargeExistingAccessory) {
+              platformVehicle.accessories.push(new DirectCharge(this.config, this.log, this.api, directChargeExistingAccessory));
+            } else {
+              this.log.info('Direct charge added as accessory');
+              const accessory = new this.api.platformAccessory('Direct charge', directChargeUuid);
+              accessory.context.device = vehicle;
+              platformVehicle.accessories.push(new DirectCharge(this.config, this.log, this.api, accessory));
+              this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
+            }
+          }
+
           // (Optionally) Register Battery
           if (this.config.batteryDevice === true) {
-            const batteryUuid = this.api.hap.uuid.generate(`${vehicle.vin}-battery`);
-            const batteryExistingAccessory = this.accessories.find(accessory => accessory.UUID === batteryUuid);
+            const batteryChargeUuid = this.api.hap.uuid.generate(`${vehicle.vin}-battery`);
+            const batteryExistingAccessory = this.accessories.find(accessory => accessory.UUID === batteryChargeUuid);
 
             if (batteryExistingAccessory) {
               platformVehicle.accessories.push(new Battery(this.config, this.log, this.api, batteryExistingAccessory));
             } else {
               this.log.info('Battery added as accessory');
-              const accessory = new this.api.platformAccessory('Battery', batteryUuid);
+              const accessory = new this.api.platformAccessory('Battery', batteryChargeUuid);
               accessory.context.device = vehicle;
               platformVehicle.accessories.push(new Battery(this.config, this.log, this.api, accessory));
               this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
             }
           }
 
+          // (Optionally) Charging Power
+          const chargingPowerUuid = this.api.hap.uuid.generate(`${vehicle.vin}-charging-power`);
+          const chargingPowerExistingAccessory = this.accessories.find(accessory => accessory.UUID === chargingPowerUuid);
+
+          if (chargingPowerExistingAccessory) {
+            platformVehicle.accessories.push(new ChargingPower(this.config, this.log, this.api, chargingPowerExistingAccessory));
+          } else {
+            this.log.info('Charging Power added as accessory');
+            const accessory = new this.api.platformAccessory('Charging Power', chargingPowerUuid);
+            accessory.context.device = vehicle;
+            platformVehicle.accessories.push(new ChargingPower(this.config, this.log, this.api, accessory));
+            this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
+          }
+
           // Register car for heart beat
           this.platformVehicles.push(platformVehicle);
         } else {
-          this.log.info(`Your Porsche ${vehicle.modelDescription} is not supported, it has an unsupported engine type ${vehicle.engineType}`);
+          this.log.info(`Your Porsche ${vehicle.nickname} is not supported, it has an unsupported engine type ${vehicle.engineType}`);
         }
       }
     }
@@ -113,7 +143,7 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
 
   private async heartBeat() {
     this.platformVehicles.forEach(async (platformVehicle: PlatformVehicle) => {
-      this.log.info(`Updating vehicle data for ${platformVehicle.vehicle.modelDescription}`);
+      this.log.debug(`Updating vehicle data for ${platformVehicle.vehicle.nickname}`);
       const vehicle = platformVehicle.vehicle;
       const emobilityInfo = await vehicle.getEmobilityInfo();
 
