@@ -1,5 +1,5 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
-import { Battery, Charger, PrecoolHeat, DirectCharge, ChargingPower } from './Accessories';
+import { Battery, Charger, PrecoolHeat, DirectCharge, ChargingPower, Occupancy } from './Accessories';
 import PorscheConnect, { EngineType } from 'porsche-connect';
 import { PlatformVehicle, PorscheAccessory } from './PlatformTypes';
 
@@ -134,6 +134,22 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
             }
           }
 
+          // (Optionally) Occupancy
+          if (this.config.locationConfig && this.config.locationConfig.lat && this.config.locationConfig.long) {
+            const occupancyUuid = this.api.hap.uuid.generate(`${vehicle.vin}-occupancy`);
+            const occupancyExistingAccessory = this.accessories.find(accessory => accessory.UUID === occupancyUuid);
+
+            if (occupancyExistingAccessory) {
+              platformVehicle.accessories.push(new Occupancy(this.config, this.log, this.api, occupancyExistingAccessory));
+            } else {
+              this.log.info('Occupancy added as accessory');
+              const accessory = new this.api.platformAccessory('Occupancy', occupancyUuid);
+              accessory.context.device = vehicle;
+              platformVehicle.accessories.push(new Occupancy(this.config, this.log, this.api, accessory));
+              this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
+            }
+          }
+
           // Register car for heart beat
           this.platformVehicles.push(platformVehicle);
         } else {
@@ -148,6 +164,7 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
       this.log.debug(`Updating vehicle data for ${platformVehicle.vehicle.nickname}`);
       const vehicle = platformVehicle.vehicle;
       const emobilityInfo = await vehicle.getEmobilityInfo();
+      const positionInfo = await vehicle.getPosition();
 
       if (emobilityInfo.batteryChargeStatus === null) {
         this.log.error('Your PCM seems to be in private mode');
@@ -156,7 +173,7 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
       }
 
       platformVehicle.accessories.forEach((accessory: PorscheAccessory) => {
-        accessory.beat(emobilityInfo, vehicle);
+        accessory.beat(emobilityInfo, positionInfo, vehicle);
       });
     });
   }

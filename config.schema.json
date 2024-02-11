@@ -42,6 +42,25 @@
         "maximum": 100,
         "default": 35,
         "description": "Which battery level in percentage is considered low"
+      },
+      "locationConfig": {
+        "title": "Home location",
+        "type": "object",
+        "properties": {
+          "lat": {
+            "title": "Latitude",
+            "type": "string",
+            "required": false,
+            "default": ""
+          },
+          "long": {
+            "title": "Longitude",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "description": "When your (home) location as latitude/longitude is filled in an occupancy sensor is exposed to indicate if your vehicle is at home. Your vehicle is recognized as being at home if the distance between it and the specified location is within 300 meters (approximately 0.2 miles). Use https://www.latlong.net/ to get the latitude and logitude of your address."
+          }
+        }
       }
     }
   }

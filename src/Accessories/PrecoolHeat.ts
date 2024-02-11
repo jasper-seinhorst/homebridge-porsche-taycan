@@ -1,6 +1,6 @@
 import { Service, PlatformAccessory, PlatformConfig, Logger, API, Characteristic } from 'homebridge';
 import { PorscheAccessory } from '../PlatformTypes';
-import { VehicleEMobility, Vehicle } from 'porsche-connect';
+import { VehicleEMobility, VehiclePosition, Vehicle } from 'porsche-connect';
 
 export default class PrecoolHeat implements PorscheAccessory {
   public readonly Service: typeof Service = this.api.hap.Service;
@@ -36,7 +36,7 @@ export default class PrecoolHeat implements PorscheAccessory {
     callback();
   }
 
-  public beat(emobilityInfo: VehicleEMobility, vehicle: Vehicle) {
+  public beat(emobilityInfo: VehicleEMobility, positionInfo : VehiclePosition, vehicle: Vehicle) {
     this.heartBeatActive = true;
     this.vehicle = vehicle;
 
