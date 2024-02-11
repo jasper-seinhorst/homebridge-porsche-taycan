@@ -103,9 +103,9 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
           }
 
           // (Optionally) Register Battery
+          const batteryChargeUuid = this.api.hap.uuid.generate(`${vehicle.vin}-battery`);
+          const batteryExistingAccessory = this.accessories.find(accessory => accessory.UUID === batteryChargeUuid);
           if (this.config.batteryDevice === true) {
-            const batteryChargeUuid = this.api.hap.uuid.generate(`${vehicle.vin}-battery`);
-            const batteryExistingAccessory = this.accessories.find(accessory => accessory.UUID === batteryChargeUuid);
 
             if (batteryExistingAccessory) {
               platformVehicle.accessories.push(new Battery(this.config, this.log, this.api, batteryExistingAccessory));
@@ -116,13 +116,16 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
               platformVehicle.accessories.push(new Battery(this.config, this.log, this.api, accessory));
               this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
             }
+          } else {
+            if (batteryExistingAccessory) {
+              this.api.unregisterPlatformAccessories(batteryChargeUuid, 'homebridge-porsche-taycan', [batteryExistingAccessory]);
+            }
           }
 
           // (Optionally) Charging Power
+          const chargingPowerUuid = this.api.hap.uuid.generate(`${vehicle.vin}-charging-power`);
+          const chargingPowerExistingAccessory = this.accessories.find(accessory => accessory.UUID === chargingPowerUuid);
           if (this.config.chargingPowerDevice === true) {
-            const chargingPowerUuid = this.api.hap.uuid.generate(`${vehicle.vin}-charging-power`);
-            const chargingPowerExistingAccessory = this.accessories.find(accessory => accessory.UUID === chargingPowerUuid);
-
             if (chargingPowerExistingAccessory) {
               platformVehicle.accessories.push(new ChargingPower(this.config, this.log, this.api, chargingPowerExistingAccessory));
             } else {
@@ -132,13 +135,16 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
               platformVehicle.accessories.push(new ChargingPower(this.config, this.log, this.api, accessory));
               this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
             }
+          } else {
+            if (chargingPowerExistingAccessory) {
+              this.api.unregisterPlatformAccessories(chargingPowerUuid, 'homebridge-porsche-taycan', [chargingPowerExistingAccessory]);
+            }
           }
 
           // (Optionally) Occupancy
+          const occupancyUuid = this.api.hap.uuid.generate(`${vehicle.vin}-occupancy`);
+          const occupancyExistingAccessory = this.accessories.find(accessory => accessory.UUID === occupancyUuid);
           if (this.config.locationConfig && this.config.locationConfig.lat && this.config.locationConfig.long) {
-            const occupancyUuid = this.api.hap.uuid.generate(`${vehicle.vin}-occupancy`);
-            const occupancyExistingAccessory = this.accessories.find(accessory => accessory.UUID === occupancyUuid);
-
             if (occupancyExistingAccessory) {
               platformVehicle.accessories.push(new Occupancy(this.config, this.log, this.api, occupancyExistingAccessory));
             } else {
@@ -147,6 +153,10 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
               accessory.context.device = vehicle;
               platformVehicle.accessories.push(new Occupancy(this.config, this.log, this.api, accessory));
               this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
+            }
+          } else {
+            if (occupancyExistingAccessory) {
+              this.api.unregisterPlatformAccessories(occupancyUuid, 'homebridge-porsche-taycan', [occupancyExistingAccessory]);
             }
           }
 

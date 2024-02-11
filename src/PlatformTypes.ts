@@ -8,5 +8,6 @@ export type PlatformVehicle = {
 
 export interface PorscheAccessory {
     accessory: PlatformAccessory;
+    displayName?: string;
     beat(emobilityInfo: VehicleEMobility, positionInfo : VehiclePosition, vehicle: Vehicle): void;
 }
