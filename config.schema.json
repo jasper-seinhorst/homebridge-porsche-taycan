@@ -23,25 +23,6 @@
         "required": true,
         "default": 30
       },
-      "chargerDevice": {
-        "title": "Charger device",
-        "type": "string",
-        "required": true,
-        "oneOf": [
-          {
-            "title": "Occupancy sensor",
-            "enum": [
-              "occupancy"
-            ]
-          },
-          {
-            "title": "Contact sensor",
-            "enum": [
-              "contact"
-            ]
-          }
-        ]
-      },
       "batteryDevice": {
         "title": "Expose SoC as humidity sensor",
         "default": false,

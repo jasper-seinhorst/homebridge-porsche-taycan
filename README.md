@@ -21,13 +21,12 @@ To install Homebridge Porsche Taycan follow these steps:
         "username": "<<Porsche Connect username>>",
         "password": "<<Porsche Connect password>>",
         "pollInterval": 30,
-        "chargerDevice": "occupancy",
         "batteryDevice": false,
         "lowBattery": 40,
         "platform": "PorscheTaycan"
     }
     ```
-  In above example the charging state and battery level are updated every 30 minutes. The charging state is exposed as an occupancy sensor. The battery level is considered low when the SoC drops below 40.
+  In above example the charging state and battery level are updated every 30 minutes. The battery level is considered low when the SoC drops below 40.
 
 ## Caveats
 - The plugin can throw authentication errors. The login method used from Porsche's API expects a captcha now and then. As a work around logon to my.porsche.com and restart the plugin. Logging in on my.porsche.com reset the need for a captcha.

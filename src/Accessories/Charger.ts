@@ -8,7 +8,6 @@ export default class Charger implements PorscheAccessory {
   private chargerService: Service;
   private batteryService: Service;
   private lowBatteryLevel: number;
-  private sensorType: 'occupancy' | 'contact';
 
   constructor(public config: PlatformConfig, public readonly log: Logger, public readonly api: API, public accessory: PlatformAccessory) {
     this.accessory.getService(this.Service.AccessoryInformation)!
@@ -17,9 +16,7 @@ export default class Charger implements PorscheAccessory {
       .setCharacteristic(this.Characteristic.SerialNumber, this.accessory.context.device.vin);
 
     this.lowBatteryLevel = this.config.lowBattery || 35;
-    this.sensorType = this.config.chargerDevice || 'occupancy';
-    this.chargerService = this.accessory.getService(this.sensorType === 'occupancy' ? this.Service.OccupancySensor : this.Service.ContactSensor)
-      || this.accessory.addService(this.sensorType === 'occupancy' ? this.Service.OccupancySensor : this.Service.ContactSensor);
+    this.chargerService = this.accessory.getService(this.Service.ContactSensor) || this.accessory.addService(this.Service.ContactSensor);
     this.batteryService = this.accessory.getService(this.Service.Battery) || this.accessory.addService(this.Service.Battery);
   }
 
@@ -43,7 +40,7 @@ export default class Charger implements PorscheAccessory {
     if (isCharging !== (this.batteryService.getCharacteristic(this.Characteristic.ChargingState).value === 1)) {
       this.log.info('Charging state ->', isCharging);
     }
-    this.chargerService.setCharacteristic(this.sensorType === 'occupancy' ? this.Characteristic.OccupancyDetected : this.Characteristic.ContactSensorState, isCharging);
+    this.chargerService.setCharacteristic(this.Characteristic.ContactSensorState, isCharging);
     this.batteryService.setCharacteristic(this.Characteristic.ChargingState, isCharging);
   }
 }
