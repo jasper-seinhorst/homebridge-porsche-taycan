@@ -58,7 +58,7 @@
             "type": "string",
             "required": false,
             "default": "",
-            "description": "When your (home) location as latitude/longitude is filled in an occupancy sensor is exposed to indicate if your vehicle is at home. Your vehicle is recognized as being at home if the distance between it and the specified location is within 300 meters (approximately 0.2 miles). Use https://www.latlong.net/ to get the latitude and logitude of your address."
+            "description": "When your (home) location as latitude/longitude is filled in an occupancy sensor is exposed to indicate if your vehicle is at home. Your vehicle is recognized as being at home if the distance between the vehicle and the specified location is within 300 meters (approximately 0.2 miles). Use https://www.latlong.net/ to get the latitude and logitude of your address."
           }
         }
       }

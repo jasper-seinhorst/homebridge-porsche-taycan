@@ -17,11 +17,9 @@ export default class PrecoolHeat implements PorscheAccessory {
 
     this.switchService = this.accessory.getService(this.Service.Switch) || this.accessory.addService(this.Service.Switch);
     this.switchService.getCharacteristic(this.Characteristic.On).on('set', this.setStatus.bind(this));
-    this.switchService.setCharacteristic(this.Characteristic.On, false);
   }
 
   private async setStatus(value, callback) {
-    // Only call API when status is not changed during heartbeat
     if (this.vehicle && !this.heartBeatActive) {
       if (value) {
         this.log.debug('Connecting with API to start Precool/heat');
@@ -36,7 +34,7 @@ export default class PrecoolHeat implements PorscheAccessory {
     callback();
   }
 
-  public beat(emobilityInfo: VehicleEMobility, positionInfo : VehiclePosition, vehicle: Vehicle) {
+  public beat(emobilityInfo: VehicleEMobility, positionInfo: VehiclePosition, vehicle: Vehicle) {
     this.heartBeatActive = true;
     this.vehicle = vehicle;
 

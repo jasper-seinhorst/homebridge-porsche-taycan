@@ -87,19 +87,17 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
           }
 
           // Register Direct charge
-          if (this.config.directChargeDevice === true) {
-            const directChargeUuid = this.api.hap.uuid.generate(`${vehicle.vin}-direct-charge`);
-            const directChargeExistingAccessory = this.accessories.find(accessory => accessory.UUID === directChargeUuid);
+          const directChargeUuid = this.api.hap.uuid.generate(`${vehicle.vin}-direct-charge`);
+          const directChargeExistingAccessory = this.accessories.find(accessory => accessory.UUID === directChargeUuid);
 
-            if (directChargeExistingAccessory) {
-              platformVehicle.accessories.push(new DirectCharge(this.config, this.log, this.api, directChargeExistingAccessory));
-            } else {
-              this.log.info('Direct charge added as accessory');
-              const accessory = new this.api.platformAccessory('Direct charge', directChargeUuid);
-              accessory.context.device = vehicle;
-              platformVehicle.accessories.push(new DirectCharge(this.config, this.log, this.api, accessory));
-              this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
-            }
+          if (directChargeExistingAccessory) {
+            platformVehicle.accessories.push(new DirectCharge(this.config, this.log, this.api, directChargeExistingAccessory));
+          } else {
+            this.log.info('Direct charge added as accessory');
+            const accessory = new this.api.platformAccessory('Direct charge', directChargeUuid);
+            accessory.context.device = vehicle;
+            platformVehicle.accessories.push(new DirectCharge(this.config, this.log, this.api, accessory));
+            this.api.registerPlatformAccessories('homebridge-porsche-taycan', 'PorscheTaycan', [accessory]);
           }
 
           // (Optionally) Register Battery

@@ -1,7 +1,7 @@
 {
   "displayName": "Homebridge Porsche Taycan",
   "name": "homebridge-porsche-taycan",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "Control your Porsche Taycan through the home app",
   "license": "Apache-2.0",
   "author": "Jasper Seinhorst",
@@ -46,6 +46,6 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "porsche-connect": "^0.0.14"
+    "porsche-connect": "^0.0.15"
   }
 }
