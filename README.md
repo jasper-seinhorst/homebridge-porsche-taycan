@@ -10,6 +10,9 @@ This Homebrudge plugin offers a range of useful features for your Porsche Taycan
 - Macan EV (MY25 and newer)
 
 ## Key features
+
+![room](./assets/example-room.png) ![charger](./assets/example-charger.png) ![charging power](./assets/example-charging-power.png) ![SoC](./assets/example-soc.png) ![Occupancy](./assets/example-occupancy.png)
+
 - Switch for **Precool / heat**
 - Switch for **Direct Charge**
 - Sensor for your **Charger** with **SoC**
