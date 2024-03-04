@@ -11,7 +11,7 @@ This Homebrudge plugin offers a range of useful features for your Porsche Taycan
 
 ## Key features
 
-![room](./assets/example-room.png) ![charger](./assets/example-charger.png) ![charging power](./assets/example-charging-power.png) ![SoC](./assets/example-soc.png) ![Occupancy](./assets/example-occupancy.png)
+![room](./assets/example-room.png)
 
 - Switch for **Precool / heat**
 - Switch for **Direct Charge**
@@ -23,6 +23,8 @@ This Homebrudge plugin offers a range of useful features for your Porsche Taycan
 <sub><sup>An *occupancy sensor* indicates if your vehicle is at home when the location of your vehicle is within 300 meters of your home</sub></sup>
 - Sensor for the **SoC** (optional)
 <sub><sup>By default SoC is available as characteristic of the charger sensor. Optionally the SoC can be exposed as *humidity sensor*.</sub></sup>
+
+![charger](./assets/example-charger.png) ![charging power](./assets/example-charging-power.png) ![SoC](./assets/example-soc.png) ![Occupancy](./assets/example-occupancy.png)
 
 ## Installation
 To install the *Homebridge Porsche Taycan* plugin follow these steps:
