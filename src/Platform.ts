@@ -10,6 +10,11 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
   public PorscheConnectAuth: PorscheConnect | undefined;
   private platformVehicles: PlatformVehicle[] = [];
   private heartBeatInterval: number;
+  private readonly updateErrorText: string = 'You vehicle seems to be in privacy mode.';
+  private readonly authenticationErrorText: string = `Please log in to your Porsche account on my.porsche.com or via 
+    the official Porsche app on your mobile device to access this feature. Once in a while Porsche needs you to fill 
+    in the captscha. Logging in on my.porsche.com or the official Porsche app on your mobile resets the need for a
+    log in with captscha. If the error persist double check your username and password.`;
 
   constructor(public readonly log: Logger, public readonly config: PlatformConfig, public readonly api: API) {
     this.heartBeatInterval = (config.pollInterval || 15) * 60 * 1000;
@@ -28,21 +33,22 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
 
   private async initialise() {
     if (!this.validateConfig()) {
-      this.log.warn('Please specify your Porsche Connect username and password in your config file');
+      this.log.error('Please specify your Porsche Connect username and password in your config file');
       return;
     }
 
     try {
       this.log.info('Authentication');
       this.PorscheConnectAuth = new PorscheConnect({ username: this.config.username, password: this.config.password});
+      this.log.info('Retrieving available vehicles');
+      await this.discoverVehicles();
+      await this.heartBeat();
     } catch (error) {
       this.log.error('Porsche Connect connection failed');
-      this.log.debug('Reason: ', error);
+      this.log.info(this.authenticationErrorText);
+      this.log.debug('Debug info: ', error);
+      return;
     }
-
-    this.log.info('Retrieving available vehicles');
-    await this.discoverVehicles();
-    await this.heartBeat();
 
     setInterval(() => {
       this.heartBeat();
@@ -171,18 +177,26 @@ export class PorscheTaycanPlatform implements DynamicPlatformPlugin {
     this.platformVehicles.forEach(async (platformVehicle: PlatformVehicle) => {
       this.log.debug(`Updating vehicle data for ${platformVehicle.vehicle.nickname}`);
       const vehicle = platformVehicle.vehicle;
-      const emobilityInfo = await vehicle.getEmobilityInfo();
-      const positionInfo = await vehicle.getPosition();
 
-      if (emobilityInfo.batteryChargeStatus === null) {
-        this.log.error('Your PCM seems to be in private mode');
-        this.log.debug('Reason: ', emobilityInfo);
-        return;
+      try {
+        const emobilityInfo = await vehicle.getEmobilityInfo();
+        const positionInfo = await vehicle.getPosition();
+
+        if (emobilityInfo.batteryChargeStatus === null) {
+          this.log.error('Your PCM seems to be in private mode');
+          this.log.info(this.updateErrorText);
+          this.log.debug('Reason: ', emobilityInfo);
+          return;
+        }
+
+        platformVehicle.accessories.forEach((accessory: PorscheAccessory) => {
+          accessory.beat(emobilityInfo, positionInfo, vehicle);
+        });
+      } catch(error){
+        this.log.error('Updating vehicle data failed');
+        this.log.info(this.updateErrorText);
+        this.log.debug('Debug info: ', error);
       }
-
-      platformVehicle.accessories.forEach((accessory: PorscheAccessory) => {
-        accessory.beat(emobilityInfo, positionInfo, vehicle);
-      });
     });
   }
 }
