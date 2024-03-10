@@ -1,8 +1,8 @@
 {
-  "displayName": "Homebridge Porsche Taycan",
   "name": "homebridge-porsche-taycan",
+  "displayName": "Porsche EV",
   "version": "1.20.0",
-  "description": "Control your Porsche Taycan through the home app",
+  "description": "Homekit support for your Porsche EV (Taycan and Macan), enable direct charge, start precool/heat, power consumption insights and more!",
   "license": "Apache-2.0",
   "author": "Jasper Seinhorst",
   "repository": {
@@ -13,7 +13,7 @@
     "url": "https://github.com/jasper-seinhorst/homebridge-porsche-taycan/issues"
   },
   "engines": {
-    "node": ">=14.18.1",
+    "node": ">=18.4.2",
     "homebridge": ">=1.3.5"
   },
   "main": "dist/index.js",
@@ -31,8 +31,9 @@
     "homekit",
     "vehicle",
     "battery",
-    "electric vehicle",
-    "ev"
+    "electric-vehicle",
+    "ev",
+    "power-consumption"
   ],
   "devDependencies": {
     "@types/node": "^20.2.5",
