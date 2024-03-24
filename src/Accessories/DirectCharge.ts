@@ -13,7 +13,7 @@ export default class DirectCharge implements PorscheAccessory {
     this.accessory.getService(this.Service.AccessoryInformation)!
       .setCharacteristic(this.Characteristic.Manufacturer, 'Porsche')
       .setCharacteristic(this.Characteristic.Model, this.accessory.context.device.modelDescription)
-      .setCharacteristic(this.Characteristic.SerialNumber, this.accessory.context.device.vin);
+      .setCharacteristic(this.Characteristic.SerialNumber, `${this.accessory.context.device.vin}-direct-charge`);
 
     this.switchService = this.accessory.getService(this.Service.Switch) || this.accessory.addService(this.Service.Switch);
     this.switchService.getCharacteristic(this.Characteristic.On).on('set', this.setStatus.bind(this));

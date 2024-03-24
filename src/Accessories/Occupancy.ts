@@ -11,7 +11,7 @@ export default class Charger implements PorscheAccessory {
     this.accessory.getService(this.Service.AccessoryInformation)!
       .setCharacteristic(this.Characteristic.Manufacturer, 'Porsche')
       .setCharacteristic(this.Characteristic.Model, this.accessory.context.device.modelDescription)
-      .setCharacteristic(this.Characteristic.SerialNumber, this.accessory.context.device.vin);
+      .setCharacteristic(this.Characteristic.SerialNumber, `${this.accessory.context.device.vin}-occupancy`);
 
     this.occupancyService = this.accessory.getService(this.Service.OccupancySensor) || this.accessory.addService(this.Service.OccupancySensor);
   }

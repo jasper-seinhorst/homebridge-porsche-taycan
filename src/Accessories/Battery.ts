@@ -11,7 +11,7 @@ export default class Battery implements PorscheAccessory {
     this.accessory.getService(this.Service.AccessoryInformation)!
       .setCharacteristic(this.Characteristic.Manufacturer, 'Porsche')
       .setCharacteristic(this.Characteristic.Model, this.accessory.context.device.modelDescription)
-      .setCharacteristic(this.Characteristic.SerialNumber, this.accessory.context.device.vin);
+      .setCharacteristic(this.Characteristic.SerialNumber, `${this.accessory.context.device.vin}-battery`);
 
     this.batteryDevice = this.accessory.getService(this.Service.HumiditySensor) || this.accessory.addService(this.Service.HumiditySensor);
   }

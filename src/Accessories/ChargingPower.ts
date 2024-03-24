@@ -11,7 +11,7 @@ export default class ChargingPower implements PorscheAccessory {
     this.accessory.getService(this.Service.AccessoryInformation)!
       .setCharacteristic(this.Characteristic.Manufacturer, 'Porsche')
       .setCharacteristic(this.Characteristic.Model, this.accessory.context.device.modelDescription)
-      .setCharacteristic(this.Characteristic.SerialNumber, this.accessory.context.device.vin);
+      .setCharacteristic(this.Characteristic.SerialNumber, `${this.accessory.context.device.vin}-charging-power`);
 
     this.chargingPower = this.accessory.getService(this.Service.LightSensor) || this.accessory.addService(this.Service.LightSensor);
   }

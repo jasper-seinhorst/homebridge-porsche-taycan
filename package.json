@@ -1,7 +1,7 @@
 {
   "name": "homebridge-porsche-taycan",
   "displayName": "Porsche EV",
-  "version": "1.21.0",
+  "version": "1.21.1",
   "description": "Homekit support for your Porsche EV (Taycan and Macan), enable direct charge, start precool/heat, power consumption insights and more!",
   "license": "Apache-2.0",
   "author": "Jasper Seinhorst",
