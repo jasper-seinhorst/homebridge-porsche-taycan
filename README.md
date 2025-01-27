@@ -1,4 +1,6 @@
 # Homebridge Porsche EV
+⛔️ DEPRECATED. This plugin is deprecated. Porsche's API is no longer accessible.
+
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 [![npm](https://img.shields.io/npm/dt/homebridge-porsche-taycan.svg)](https://www.npmjs.com/package/homebridge-porsche-taycan)
 [![npm](https://img.shields.io/npm/v/homebridge-porsche-taycan.svg)](https://www.npmjs.com/package/homebridge-porsche-taycan)
